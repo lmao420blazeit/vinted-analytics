@@ -1,0 +1,6 @@
+artifact_location: file:///C:/Users/Miguel/Desktop/dataengineeringpr/vinted-prefect/mlruns/359325469213332912
+creation_time: 1706541720790
+experiment_id: '359325469213332912'
+last_update_time: 1706541720790
+lifecycle_stage: active
+name: XGBoost-catalog_classifier

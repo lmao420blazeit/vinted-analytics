@@ -1,0 +1,15 @@
+artifact_uri: file:///C:/Users/Miguel/Desktop/dataengineeringpr/vinted-prefect/mlruns/359325469213332912/87ad973c09c34cebb4666741c8bef4f9/artifacts
+end_time: 1706544027475
+entry_point_name: ''
+experiment_id: '359325469213332912'
+lifecycle_stage: active
+run_id: 87ad973c09c34cebb4666741c8bef4f9
+run_name: XGBoost Model
+run_uuid: 87ad973c09c34cebb4666741c8bef4f9
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1706544027428
+status: 4
+tags: []
+user_id: Miguel

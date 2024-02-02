@@ -1,0 +1,94 @@
+from metaflow import FlowSpec, step
+import pandas as pd
+
+
+def script_path(filename):
+    import os
+
+    filepath = os.path.join(os.path.dirname(__file__))
+    return os.path.join(filepath, filename)
+
+
+class CatalogFlow(FlowSpec):
+    """
+    A Flow to train two Iris dataset models and combine them for inference with Tempo
+
+    The flow performs the following steps:
+
+    1) Load Vinted Data
+    3) Train XGBoost Classification Model
+    4) Create and deploy artifacts
+    """
+
+    #@conda(libraries={"scikit-learn": "0.24.1"})
+    @step
+    def start(self):
+        """
+        Load data from vinted SQL db
+        """
+        # pylint: disable=no-member
+        from sqlalchemy import create_engine
+        import pandas as pd
+
+        engine = create_engine('postgresql://user:4202@localhost:5432/vinted-ai')
+        sql_query = "SELECT * FROM public.products_catalog"
+        df = pd.read_sql(sql_query, engine)
+        self.df = df[["price", "brand_title", "size_title", "status", "catalog_id"]]
+        self.next(self.preprocess)
+
+    @step
+    def preprocess(self):
+        from sklearn.preprocessing import OrdinalEncoder
+        from sklearn.preprocessing import OneHotEncoder
+
+        ordinal_encoder = OrdinalEncoder(categories=[["Satisfatório", "Bom", "Muito bom", "Novo sem etiquetas", "Novo com etiquetas"]])
+        status = pd.DataFrame(ordinal_encoder
+                              .fit_transform(self.df[['status']])
+                              ).add_prefix("status_")
+
+        onehot_encoder = OneHotEncoder(sparse_output=False)
+
+        size_title = pd.DataFrame(onehot_encoder
+                                  .fit_transform(self.df[['size_title']])
+                                  ).add_prefix("size_title_")
+
+        self.labels = pd.concat([size_title, status, self.df["price"]], axis = 1, ignore_index= False)
+
+        ordinal_encoder = OrdinalEncoder(categories="auto")
+        target = ordinal_encoder.fit_transform(self.df["catalog_id"].values.reshape(-1, 1))
+        self.target = pd.DataFrame(target)
+        self.next(self.split_data)
+
+    @step
+    def split_data(self):
+        from sklearn.model_selection import train_test_split
+
+        self.X_train, self.X_test, self.y_train, self.y_test = train_test_split(self.labels, self.target, random_state=42)
+        self.next(self.train_xgboost)
+
+    #@conda(libraries={"xgboost": "1.4.0"})
+    @step
+    def train_xgboost(self):
+        """
+        Train an XGBoost classifier on the dataset and save model as artifact
+        """
+        from xgboost import XGBClassifier
+
+        xgb = XGBClassifier()
+        xgb.fit(self.X_train, self.y_test)
+        xgb.save_model(script_path("model.bst"))
+        with open(script_path("model.bst"), "rb") as fh:
+            self.buffered_xgb_model = fh.read()
+        self.next(self.end)
+
+
+    @step
+    def end(self):
+        """
+        End flow.
+        """
+        pass
+
+
+if __name__ == "__main__":
+    CatalogFlow()

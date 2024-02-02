@@ -1,0 +1,6 @@
+artifact_location: file:///C:/Users/Miguel/Desktop/dataengineeringpr/vinted-prefect/mlruns/164706770506981855
+creation_time: 1706713868303
+experiment_id: '164706770506981855'
+last_update_time: 1706713868303
+lifecycle_stage: active
+name: LogisticRegressor-feature-ranking
