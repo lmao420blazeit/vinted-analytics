@@ -129,6 +129,11 @@ for score in lr_scores:
         print(f"{score:<17}: {np.mean(lr_scores[score]):.2f}")
 
 best_lr_model = gs_lr.best_estimator_
+print(best_lr_model.coef_[0])
+
+coefficients_df = pd.DataFrame({'Feature': cols, 'Coefficient': best_lr_model.coef_[0]})
+coefficients_df = coefficients_df.sort_values(by='Coefficient', ascending=False).head(10)
+print(coefficients_df)
 
 joblib.dump(best_lr_model, 'model_development/model_artifacts/logisticregression.pkl')
 
