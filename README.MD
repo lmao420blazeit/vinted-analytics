@@ -22,18 +22,18 @@ The purpose of this project is to find key insights about data from Vinted which
 
 - [x] Create an API to connect to Vinted Endpoints 
 - [x] Create a basic data pipeline with prefect and postgres
-- [ ] Develop a pipeline to track brand statistics
-- [ ] Develop a pipeline to track saleability
 - [ ] Create a "Shoe or Clothing" binary label based on sizes
-- [ ] Find a way to overcome API rate limits (currently implemented Exponential Backoff on requests)
+- [ ] Documentation
 
 ### Backlog
 
 - [ ] Work on the dashboard
-- [ ] Documentation
+- [ ] Develop a pipeline to track saleability
+- [ ] Develop a pipeline to track brand and catalog_id statistics
 - [ ] Cluster catalog_id's into groups
 - [ ] Create dim tables for brands, sizes and colours
 - [ ] Normalize the database
+- [ ] Find a way to overcome API rate limits (currently implemented Exponential Backoff on requests)
 
 ### Main roadblocks
 
@@ -47,11 +47,20 @@ The purpose of this project is to find key insights about data from Vinted which
 
 ##### Staging area
 
-![Local Image](currentschema.png)
+![Local Image](assets/currentschema.png)
 
 ##### Staging workflows
 
-![Local Image](mainflow.png)
+![Local Image](assets/mainflow.png)
+
+1. Load raw data from api
+2. Drop and rename columns
+3. Format sizes into unique groups (ex. M / 36 / ... -> M)
+4. TODO: Add row "is_sneaker" based on sizes
+5. Export data:
+    - Export prefect artifacts
+    - Export data to pg
+    - Export samples to pg
 
 ## Findings
 
@@ -60,7 +69,7 @@ The purpose of this project is to find key insights about data from Vinted which
 Tukey HSD is often used as an extension of ANOVA (post-hoc test) to compare means between 2 groups. Caveat: does not take into account covariates (the effects of labels)
 There is a significant difference between all groups except Bom Satisfatório.
 
-Tukeys HSD test
+**Tukeys HSD test**
 
 | group1                  | group2                  | meandiff | p-adj | lower  | upper  | reject |
 |-------------------------|-------------------------|----------|-------|--------|--------|--------|
@@ -75,17 +84,17 @@ Tukeys HSD test
 | Novo com etiquetas      | Satisfatório            | -34.2493 | 0.0   |-38.4684|-30.0302| True   |
 | Novo sem etiquetas      | Satisfatório            | -10.1253 | 0.0   |-14.303 |-5.9475| True   |
 
-Marginal gains:
+**Marginal gains:**
 
 Bom -> Muito Bom = 3.4€ avg
 Muito Bom -> Novo sem etiquetas = 5.5€
 Nove sem etiquetas -> Novo com etiquetas = 24.1€
 
-![Local Image](status_tukey.png)
+![Local Image](assets/status_tukey.png)
 
 ### How article catalog conditions price
 
-Tukeys HSD test
+**Tukeys HSD test**
 
 | group1 | group2 | meandiff | p-adj | lower  | upper  | reject |
 |--------|--------|----------|-------|--------|--------|--------|
@@ -93,18 +102,18 @@ Tukeys HSD test
 |   76   |  1231  |  32.8322  |  0.0  | 31.7076| 33.9568|  True  |
 |  221   |  1231  |  39.2144  |  0.0  | 38.1552| 40.2736|  True  |
 
-Difference between labels:
+**Difference between labels:**
 
 76 (t shirts) -> 221 (women t shirts) = -6.4€ avg
 76 (t shirts) -> 1231 (sneakers) = 33€
 221 (women t shirts) -> 1231 (sneakers) = 39.2€
 
-![Local Image](catalog_tukey.png)
+![Local Image](assets/catalog_tukey.png)
 
 ### How brand price conditions price (top 30 brands by listing frequency)
 
 
-![Local Image](brand_tukey.png)
+![Local Image](assets/brand_tukey.png)
 
 
 It's clear there are underlying covariate which explain the deviations between brands. For instance, knowing Timberland, New Balance and Jordan are mostly sneakers brands and sneakers have huge margins on other types of catalog items is very important to understand the deviations. This further emphasis the importance of domain knowledge in data science.
@@ -112,13 +121,10 @@ It's clear there are underlying covariate which explain the deviations between b
 ### How sizes condition price
 
 #### Clothing
-![Local Image](size1_tukey.png)
+![Local Image](assets/size1_tukey.png)
 
 #### Shoes
-![Local Image](size2_tukey.png)
-
-
-### Takeaways
+![Local Image](assets/size2_tukey.png)
 
 
 
