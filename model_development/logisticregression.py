@@ -17,7 +17,7 @@ from imblearn.metrics import specificity_score
 uri = 'postgresql://user:4202@localhost:5432/vinted-ai'
 engine = create_engine(uri)
 
-sql_query = "SELECT * FROM public.products_catalog LIMIT 10000"
+sql_query = "SELECT * FROM public.products_catalog LIMIT 5000"
 data = pd.read_sql(sql_query, engine)
 
 from sklearn import svm
@@ -93,7 +93,8 @@ model_params.to_csv("model_development/model_artifacts/params.csv")
 X_train, X_test, y_train, y_test = train_test_split(labels, data["target"], random_state=42)
 
 # complexity nf(n)**n_features
-lr = LogisticRegression(max_iter=1000)
+lr = LogisticRegression(max_iter=1000, 
+                        solver = 'saga')
 
 # parameter space
 parameters = {'C': Real(1e-3, 1e+2, prior='log-uniform')}
@@ -155,10 +156,12 @@ roc = RocCurveDisplay.from_estimator(gs_lr.best_estimator_, X_test, y_test,
 
 import shap
 
-model = best_lr_model.fit(X_test, y_test)
+#model = best_lr_model.fit(X_test, y_test)
 
-explainer = shap.Explainer(model)
-shap_values = explainer(X_test)
+explainer = shap.LinearExplainer(best_lr_model, X_train)
+shap_values = explainer.shap_values(X_test)
+
+shap.summary_plot(shap_values, X_test, feature_names=cols, model_output='probability')
 
 clust = shap.utils.hclust(X_test, y_test, linkage="single")
 shap.plots.bar(shap_values, clustering=clust, clustering_cutoff=1)

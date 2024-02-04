@@ -11,19 +11,17 @@ import re
 from prefect.artifacts import create_table_artifact
 
 @task(name="Load from api", log_prints= True)
-def load_data_from_api(nbrRows, batch_size, item) -> pd.DataFrame:
+def load_data_from_api(nbrRows: int, batch_size: int, item: List) -> pd.DataFrame:
     """
-    Template code for a transformer block.
-
-    Add more parameters to this function if this block has multiple parent blocks.
-    There should be one parameter for each output variable from each parent block.
+    Loads data from the Vinted API based on specified parameters.
 
     Args:
-        data: The output from the upstream parent block
-        args: The output from any additional upstream blocks (if applicable)
+        nbrRows (int): Number of rows to fetch from the API.
+        batch_size (int): Batch size for API requests.
+        item (List): List of items to include in the API request.
 
     Returns:
-        Anything (e.g. data frame, dictionary, array, int, str, etc.)
+        pd.DataFrame: DataFrame containing data fetched from the Vinted API.
     """
     vinted = Vinted()
     date = datetime.datetime.now()
@@ -41,17 +39,13 @@ def load_data_from_api(nbrRows, batch_size, item) -> pd.DataFrame:
 @task(name="Drop columns and rename.")
 def transform(data: pd.DataFrame) -> pd.DataFrame:
     """
-    Template code for a transformer block.
-
-    Add more parameters to this function if this block has multiple parent blocks.
-    There should be one parameter for each output variable from each parent block.
+    Transforms the input DataFrame by dropping columns, renaming columns, and converting data types.
 
     Args:
-        data: The output from the upstream parent block
-        args: The output from any additional upstream blocks (if applicable)
+        data (pd.DataFrame): Input DataFrame.
 
     Returns:
-        Anything (e.g. data frame, dictionary, array, int, str, etc.)
+        pd.DataFrame: Transformed DataFrame.
     """
     # Specify your transformation logic here
     data["price"] = data["price"].astype(float)
@@ -68,17 +62,13 @@ def transform(data: pd.DataFrame) -> pd.DataFrame:
 @task(name="Parse size_title into unique sizes (S, M, XL, XXL).")
 def parse_size_title(data: pd.DataFrame) -> pd.DataFrame:
     """
-    Template code for a transformer block.
-
-    Add more parameters to this function if this block has multiple parent blocks.
-    There should be one parameter for each output variable from each parent block.
+    Parses the 'size_title' column into unique sizes (S, M, XL, XXL).
 
     Args:
-        data: The output from the upstream parent block
-        args: The output from any additional upstream blocks (if applicable)
+        data (pd.DataFrame): Input DataFrame.
 
     Returns:
-        Anything (e.g. data frame, dictionary, array, int, str, etc.)
+        pd.DataFrame: DataFrame with 'size_title' column parsed into unique sizes.
     """
     # Specify your transformation logic here
     def check_string(string_to_check):
@@ -96,19 +86,15 @@ def parse_size_title(data: pd.DataFrame) -> pd.DataFrame:
     return (data)
 
 @task(name="Transform metadata.")
-def transform_metadata(data: pd.DataFrame):
+def transform_metadata(data: pd.DataFrame) -> pd.DataFrame:
     """
-    Template code for a transformer block.
-
-    Add more parameters to this function if this block has multiple parent blocks.
-    There should be one parameter for each output variable from each parent block.
+    Transforms metadata by adding missing values and total rows information.
 
     Args:
-        data: The output from the upstream parent block
-        args: The output from any additional upstream blocks (if applicable)
+        data (pd.DataFrame): Input DataFrame.
 
     Returns:
-        Anything (e.g. data frame, dictionary, array, int, str, etc.)
+        pd.DataFrame: Transformed DataFrame with metadata information.
     """
     # Specify your transformation logic here
     flow_meta = FlowRunContext.get().flow_run.dict()
@@ -121,7 +107,16 @@ def transform_metadata(data: pd.DataFrame):
     return (data)
 
 @task(name = "Create artifacts.")
-def create_artifacts(data):
+def create_artifacts(data: pd.DataFrame) -> None:
+    """
+    Creates artifacts by generating summary statistics.
+
+    Args:
+        data (pd.DataFrame): Input DataFrame.
+
+    Returns:
+        None
+    """
     create_table_artifact(key = "output-describe",
                           table = data.describe().reset_index().to_dict(orient='records'),
                           description= "output describe pandas")
@@ -130,17 +125,14 @@ def create_artifacts(data):
 @task(name="Export sample to pg")
 def export_metadata_to_postgres(data: pd.DataFrame, engine) -> None:
     """
-    Template code for a transformer block.
-
-    Add more parameters to this function if this block has multiple parent blocks.
-    There should be one parameter for each output variable from each parent block.
+    Exports metadata to a PostgreSQL table.
 
     Args:
-        data: The output from the upstream parent block
-        args: The output from any additional upstream blocks (if applicable)
+        data (pd.DataFrame): Input DataFrame containing metadata.
+        engine: The SQLAlchemy engine for the PostgreSQL database.
 
     Returns:
-        Anything (e.g. data frame, dictionary, array, int, str, etc.)
+        None
     """
     #schema_name = 'public'  # Specify the name of the schema to export data to
     table_name = 'flow_metadata'  # Specify the name of the table to export data to
@@ -153,19 +145,17 @@ def export_metadata_to_postgres(data: pd.DataFrame, engine) -> None:
     return
 
 @task(name="Export sample to pg")
-def export_sample_to_postgres(data: pd.DataFrame, sample_frac, engine) -> None:
+def export_sample_to_postgres(data: pd.DataFrame, sample_frac: float, engine) -> None:
     """
-    Template code for a transformer block.
-
-    Add more parameters to this function if this block has multiple parent blocks.
-    There should be one parameter for each output variable from each parent block.
+    Exports a sample of data to a PostgreSQL table.
 
     Args:
-        data: The output from the upstream parent block
-        args: The output from any additional upstream blocks (if applicable)
+        data (pd.DataFrame): Input DataFrame containing the sample.
+        sample_frac (float): Fraction of the original data to be included in the sample.
+        engine: The SQLAlchemy engine for the PostgreSQL database.
 
     Returns:
-        Anything (e.g. data frame, dictionary, array, int, str, etc.)
+        None
     """
     #schema_name = 'public'  # Specify the name of the schema to export data to
     table_name = 'samples'  # Specify the name of the table to export data to
@@ -182,17 +172,14 @@ def export_sample_to_postgres(data: pd.DataFrame, sample_frac, engine) -> None:
 @task(name="Export data to pg", log_prints=True)
 def export_data_to_postgres(data: pd.DataFrame, engine) -> None:
     """
-    Template code for a transformer block.
-
-    Add more parameters to this function if this block has multiple parent blocks.
-    There should be one parameter for each output variable from each parent block.
+    Exports a pandas DataFrame to a specified PostgreSQL table using the provided database engine.
 
     Args:
-        data: The output from the upstream parent block
-        args: The output from any additional upstream blocks (if applicable)
+        data (pd.DataFrame): The DataFrame to be exported to PostgreSQL.
+        engine: The SQLAlchemy engine for the PostgreSQL database.
 
     Returns:
-        Anything (e.g. data frame, dictionary, array, int, str, etc.)
+        None
     """
     #schema_name = 'public'  # Specify the name of the schema to export data to
     table_name = 'products_catalog'  # Specify the name of the table to export data to
