@@ -3,7 +3,6 @@ import pandas as pd
 from typing import List
 import datetime
 from os import path
-from sqlalchemy import create_engine
 from prefect import task
 from prefect.context import FlowRunContext
 from ..utils import insert_on_conflict_nothing
@@ -12,7 +11,7 @@ import re
 from prefect.artifacts import create_table_artifact
 
 @task(name="Load from api", log_prints= True)
-def load_data_from_api(nbrRows, batch_size, item) -> List[pd.DataFrame]:
+def load_data_from_api(nbrRows, batch_size, item) -> pd.DataFrame:
     """
     Template code for a transformer block.
 
@@ -40,7 +39,7 @@ def load_data_from_api(nbrRows, batch_size, item) -> List[pd.DataFrame]:
     return (items)
 
 @task(name="Drop columns and rename.")
-def transform(data: pd.DataFrame):
+def transform(data: pd.DataFrame) -> pd.DataFrame:
     """
     Template code for a transformer block.
 
@@ -67,7 +66,7 @@ def transform(data: pd.DataFrame):
     return (data)
 
 @task(name="Parse size_title into unique sizes (S, M, XL, XXL).")
-def parse_size_title(data: pd.DataFrame):
+def parse_size_title(data: pd.DataFrame) -> pd.DataFrame:
     """
     Template code for a transformer block.
 
@@ -122,14 +121,14 @@ def transform_metadata(data: pd.DataFrame):
     return (data)
 
 @task(name = "Create artifacts.")
-def create_artifacts(df):
+def create_artifacts(data):
     create_table_artifact(key = "output-describe",
-                          table = df.describe().reset_index().to_dict(orient='records'),
+                          table = data.describe().reset_index().to_dict(orient='records'),
                           description= "output describe pandas")
 
 
 @task(name="Export sample to pg")
-def export_metadata_to_postgres(df: pd.DataFrame) -> None:
+def export_metadata_to_postgres(data: pd.DataFrame, engine) -> None:
     """
     Template code for a transformer block.
 
@@ -145,13 +144,16 @@ def export_metadata_to_postgres(df: pd.DataFrame) -> None:
     """
     #schema_name = 'public'  # Specify the name of the schema to export data to
     table_name = 'flow_metadata'  # Specify the name of the table to export data to
-    engine = create_engine('postgresql://user:4202@localhost:5432/vinted-ai')
-    df.to_sql(table_name, engine, if_exists = "append", index = False, method = insert_on_conflict_nothing)
+    data.to_sql(table_name, 
+                engine, 
+                if_exists = "append", 
+                index = False, 
+                method = insert_on_conflict_nothing)
     
     return
 
 @task(name="Export sample to pg")
-def export_sample_to_postgres(df: pd.DataFrame, sample_frac) -> None:
+def export_sample_to_postgres(data: pd.DataFrame, sample_frac, engine) -> None:
     """
     Template code for a transformer block.
 
@@ -167,15 +169,18 @@ def export_sample_to_postgres(df: pd.DataFrame, sample_frac) -> None:
     """
     #schema_name = 'public'  # Specify the name of the schema to export data to
     table_name = 'samples'  # Specify the name of the table to export data to
-    engine = create_engine('postgresql://user:4202@localhost:5432/vinted-ai')
 
-    df = df[["product_id", "catalog_id", "user_id", "date"]].groupby("catalog_id", group_keys=False).apply(lambda x: x.sample(frac = sample_frac))
-    df.to_sql(table_name, engine, if_exists = "append", index = False, method = insert_on_conflict_nothing)
+    data = data[["product_id", "catalog_id", "user_id", "date"]].groupby("catalog_id", group_keys=False).apply(lambda x: x.sample(frac = sample_frac))
+    data.to_sql(table_name, 
+                engine, 
+                if_exists = "append", 
+                index = False, 
+                method = insert_on_conflict_nothing)
     
     return
 
 @task(name="Export data to pg", log_prints=True)
-def export_data_to_postgres(df: pd.DataFrame) -> None:
+def export_data_to_postgres(data: pd.DataFrame, engine) -> None:
     """
     Template code for a transformer block.
 
@@ -191,8 +196,12 @@ def export_data_to_postgres(df: pd.DataFrame) -> None:
     """
     #schema_name = 'public'  # Specify the name of the schema to export data to
     table_name = 'products_catalog'  # Specify the name of the table to export data to
-    engine = create_engine('postgresql://user:4202@localhost:5432/vinted-ai')
-    df["flow_name"] = FlowRunContext.get().flow_run.dict().get('name')
-    df.to_sql(table_name, engine, if_exists = "append", index = False, method = insert_on_conflict_nothing)
+    #engine = create_engine('postgresql://user:4202@localhost:5432/vinted-ai')
+    data["flow_name"] = FlowRunContext.get().flow_run.dict().get('name')
+    data.to_sql(table_name, 
+                engine, 
+                if_exists = "append", 
+                index = False, 
+                method = insert_on_conflict_nothing)
 
     return

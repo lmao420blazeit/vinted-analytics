@@ -17,7 +17,7 @@ from imblearn.metrics import specificity_score
 uri = 'postgresql://user:4202@localhost:5432/vinted-ai'
 engine = create_engine(uri)
 
-sql_query = "SELECT * FROM public.products_catalog LIMIT 15000"
+sql_query = "SELECT * FROM public.products_catalog LIMIT 10000"
 data = pd.read_sql(sql_query, engine)
 
 from sklearn import svm
@@ -93,8 +93,7 @@ model_params.to_csv("model_development/model_artifacts/params.csv")
 X_train, X_test, y_train, y_test = train_test_split(labels, data["target"], random_state=42)
 
 # complexity nf(n)**n_features
-lr = LogisticRegression(max_iter=1000, 
-                        solver = 'saga')
+lr = LogisticRegression(max_iter=1000)
 
 # parameter space
 parameters = {'C': Real(1e-3, 1e+2, prior='log-uniform')}
@@ -129,13 +128,16 @@ for score in lr_scores:
         print(f"{score:<17}: {np.mean(lr_scores[score]):.2f}")
 
 best_lr_model = gs_lr.best_estimator_
-print(best_lr_model.coef_[0])
+print(best_lr_model)
+print(len(best_lr_model.coef_[0]))
+print(len(cols))
 
-coefficients_df = pd.DataFrame({'Feature': cols, 'Coefficient': best_lr_model.coef_[0]})
-coefficients_df = coefficients_df.sort_values(by='Coefficient', ascending=False).head(10)
-print(coefficients_df)
+#coefficients_df = pd.DataFrame({'Feature': cols, 'Coefficient': best_lr_model.coef_[0]})
+#coefficients_df = coefficients_df.sort_values(by='Coefficient', ascending=False).head(10)
+#print(coefficients_df)
 
-joblib.dump(best_lr_model, 'model_development/model_artifacts/logisticregression.pkl')
+joblib.dump(best_lr_model, 
+            'model_development/model_artifacts/logisticregression.pkl')
 
 f, axs = plt.subplots(1, 1, figsize=(4, 10))
 disp = ConfusionMatrixDisplay.from_predictions(y_test, lr_preds,
@@ -149,4 +151,15 @@ f, axs = plt.subplots(1, 1, figsize=(5, 4))
 roc = RocCurveDisplay.from_estimator(gs_lr.best_estimator_, X_test, y_test, 
                                name="Logistic Regression",
                                ax=axs)
+
+
+import shap
+
+model = best_lr_model.fit(X_test, y_test)
+
+explainer = shap.Explainer(model)
+shap_values = explainer(X_test)
+
+clust = shap.utils.hclust(X_test, y_test, linkage="single")
+shap.plots.bar(shap_values, clustering=clust, clustering_cutoff=1)
 plt.show()

@@ -15,6 +15,8 @@ The purpose of this project is to find key insights about data from Vinted which
 ##### Other
 
 - Tracking data drift by monitoring flow metadata and Kullback-Leibler Divergence (difference between distributions accross timeframes)
+    -> Tracking proportion differences between categorical variables
+    -> Tracking KL divergence for numerical variables
 
 ## Roadmap
 

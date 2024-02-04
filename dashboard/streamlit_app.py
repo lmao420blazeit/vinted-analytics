@@ -5,7 +5,7 @@ import plotly.express as px
 import seaborn as sns
 import matplotlib.pyplot as plt
 import plotly.graph_objects as go
-
+import subprocess
 
 # Load a sample dataset
 def load_data():
@@ -103,14 +103,13 @@ def main():
     # do stacked bar with percentage of total count and price
 
     brands = st.session_state.products_catalog.groupby(["status"])["product_id"].count().sort_values(ascending = False).head(20).reset_index()["status"]
-    print(brands)
 
     fig = px.box(st.session_state.products_catalog[st.session_state.products_catalog["status"].isin(brands)], 
                        y="price", 
                        color="status",
                        orientation="v",
                        title= "Status-price boxplot")
-    st.plotly_chart(fig, use_container_width=True)   
+    st.plotly_chart(fig, use_container_width=True) 
 
 
 if __name__ == "__main__":

@@ -1,11 +1,14 @@
-from data_orchestration.prefect_tasks.tasks_vinted_catalog import *
 from prefect import flow
+from sqlalchemy import create_engine
+from data_orchestration.prefect_tasks.tasks_vinted_catalog import *
 
 @flow(name= "Fetch from vinted", log_prints= True)
 def fetch_data_from_vinted(sample_frac = 0.01, 
                            item_ids = [221, 1231, 76], 
                            batch_size = 100, 
                            nbrRows = 300):
+    
+    engine = create_engine('postgresql://user:4202@localhost:5432/vinted-ai')
     df_list = []
     for __item in [221, 1231, 76]:
         df = load_data_from_api(nbrRows = nbrRows,
@@ -17,12 +20,14 @@ def fetch_data_from_vinted(sample_frac = 0.01,
                    ignore_index= True)
     #df2 = transform_metadata(df)
     #export_metadata_to_postgres(df2)
-    df = transform(df)
-    df = parse_size_title(df)
-    create_artifacts(df)
-    export_data_to_postgres(df)     # upload first to products due to FK referencing
+    df = transform(data = df)
+    df = parse_size_title(data = df)
+    create_artifacts(data = df)
+    export_data_to_postgres(data = df, 
+                            engine = engine)     # upload first to products due to FK referencing
     export_sample_to_postgres(df, 
-                              sample_frac= sample_frac)
+                              sample_frac= sample_frac,
+                              engine = engine)
     return
 
 if __name__ == "__main__":
