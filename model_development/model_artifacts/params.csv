@@ -1,37 +1,37 @@
 ,Labels,Decoded
-0,size_title_0,size_title_38
-1,size_title_1,"size_title_38,5"
-2,size_title_2,size_title_39
-3,size_title_3,"size_title_39,5"
-4,size_title_4,size_title_40
-5,size_title_5,"size_title_40,5"
-6,size_title_6,size_title_41
-7,size_title_7,size_title_41 cm
-8,size_title_8,"size_title_41,5"
-9,size_title_9,size_title_42
-10,size_title_10,"size_title_42,5"
-11,size_title_11,size_title_43
-12,size_title_12,size_title_43 cm
-13,size_title_13,"size_title_43,5"
-14,size_title_14,size_title_44
-15,size_title_15,size_title_44 cm
-16,size_title_16,"size_title_44,5"
-17,size_title_17,size_title_45
-18,size_title_18,"size_title_45,5"
-19,size_title_19,size_title_46
-20,size_title_20,"size_title_46,5"
-21,size_title_21,"size_title_47,5"
-22,size_title_22,size_title_48
-23,size_title_23,size_title_4XL
-24,size_title_24,size_title_4XL / 48 / 20
-25,size_title_25,size_title_5XL / 50 / 22
+0,size_title_0,size_title_37 cm
+1,size_title_1,size_title_38
+2,size_title_2,"size_title_38,5"
+3,size_title_3,size_title_39
+4,size_title_4,"size_title_39,5"
+5,size_title_5,size_title_40
+6,size_title_6,"size_title_40,5"
+7,size_title_7,size_title_41
+8,size_title_8,size_title_41 cm
+9,size_title_9,"size_title_41,5"
+10,size_title_10,size_title_42
+11,size_title_11,size_title_42 cm
+12,size_title_12,"size_title_42,5"
+13,size_title_13,size_title_43
+14,size_title_14,size_title_43 cm
+15,size_title_15,"size_title_43,5"
+16,size_title_16,size_title_44
+17,size_title_17,size_title_44 cm
+18,size_title_18,"size_title_44,5"
+19,size_title_19,size_title_45
+20,size_title_20,"size_title_45,5"
+21,size_title_21,size_title_46
+22,size_title_22,"size_title_46,5"
+23,size_title_23,"size_title_47,5"
+24,size_title_24,size_title_48
+25,size_title_25,size_title_4XL / 48 / 20
 26,size_title_26,size_title_6XL / 52 / 24
-27,size_title_27,size_title_7XL / 54 / 26
-28,size_title_28,size_title_8XL / 56 / 28
-29,size_title_29,size_title_L
-30,size_title_30,size_title_L / 40 / 12
-31,size_title_31,size_title_M
-32,size_title_32,size_title_M / 38 / 10
+27,size_title_27,size_title_8XL / 56 / 28
+28,size_title_28,size_title_L
+29,size_title_29,size_title_L / 40 / 12
+30,size_title_30,size_title_M
+31,size_title_31,size_title_M / 38 / 10
+32,size_title_32,size_title_Outro
 33,size_title_33,size_title_S
 34,size_title_34,size_title_S / 36 / 8
 35,size_title_35,size_title_Tamanho único
@@ -44,360 +44,359 @@
 42,size_title_42,size_title_XXS / 32 / 4
 43,size_title_43,size_title_XXXL
 44,size_title_44,size_title_XXXL / 46 / 18
-45,size_title_45,size_title_XXXS / 30 / 2
-46,status_0,status
-47,brand_title_0,brand_title_
-48,brand_title_1,brand_title_10 Days
-49,brand_title_2,brand_title_123
-50,brand_title_3,brand_title_ALEXANDER
-51,brand_title_4,brand_title_AM Shoe Company
-52,brand_title_5,brand_title_ASOS
-53,brand_title_6,brand_title_AZARA PARIS
-54,brand_title_7,brand_title_Abercrombie & Fitch
-55,brand_title_8,brand_title_About
-56,brand_title_9,brand_title_Aeropilote
-57,brand_title_10,brand_title_Aglini
-58,brand_title_11,brand_title_Aigle
-59,brand_title_12,brand_title_Air Force
-60,brand_title_13,brand_title_Alberta Ferretti
-61,brand_title_14,brand_title_Alternative
-62,brand_title_15,brand_title_Ambitious
-63,brand_title_16,brand_title_Ami Paris
-64,brand_title_17,brand_title_Anine Bing
-65,brand_title_18,brand_title_Anne Valerie Hash
-66,brand_title_19,brand_title_Arche
-67,brand_title_20,brand_title_Armand Thierry
-68,brand_title_21,brand_title_Armand Thiery
-69,brand_title_22,brand_title_Armani
-70,brand_title_23,brand_title_Armor-Lux
-71,brand_title_24,brand_title_Army
-72,brand_title_25,brand_title_Asics
-73,brand_title_26,brand_title_Atmosphere
-74,brand_title_27,brand_title_Axo
-75,brand_title_28,brand_title_BSB
-76,brand_title_29,brand_title_Bear
-77,brand_title_30,brand_title_Bershka
-78,brand_title_31,brand_title_Black Mojito
-79,brand_title_32,brand_title_Blancheporte
-80,brand_title_33,brand_title_Blanco
-81,brand_title_34,brand_title_Blauer
-82,brand_title_35,brand_title_Blundstone
-83,brand_title_36,brand_title_Boutique Parisienne
-84,brand_title_37,brand_title_Brandy Melville
-85,brand_title_38,brand_title_Brave Soul
-86,brand_title_39,brand_title_Brice
-87,brand_title_40,brand_title_Brooks
-88,brand_title_41,brand_title_Brooks Brothers
-89,brand_title_42,brand_title_Bryan H
-90,brand_title_43,brand_title_Buffalo
-91,brand_title_44,brand_title_Burberry
-92,brand_title_45,brand_title_Burton
-93,brand_title_46,brand_title_C&A
-94,brand_title_47,brand_title_C.P. Company
-95,brand_title_48,brand_title_CC Collection
-96,brand_title_49,brand_title_CHC-Shoes
-97,brand_title_50,brand_title_COS
-98,brand_title_51,brand_title_CSB
-99,brand_title_52,brand_title_Cache Cache
-100,brand_title_53,brand_title_Calvin Klein
-101,brand_title_54,brand_title_Calvin Klein Jeans
-102,brand_title_55,brand_title_Camaïeu
-103,brand_title_56,brand_title_Camper
-104,brand_title_57,brand_title_Carolina Herrera
-105,brand_title_58,brand_title_Caroll
-106,brand_title_59,brand_title_Caterpillar
-107,brand_title_60,brand_title_Celio
-108,brand_title_61,brand_title_Champion
-109,brand_title_62,brand_title_Chipie
-110,brand_title_63,brand_title_Christine Laure
-111,brand_title_64,brand_title_Cintre à cintre
-112,brand_title_65,brand_title_Citylife
-113,brand_title_66,brand_title_Clarks
-114,brand_title_67,brand_title_Clarks Originals
-115,brand_title_68,brand_title_Claudie Pierlot
-116,brand_title_69,brand_title_Clockhouse
-117,brand_title_70,brand_title_Club Room
-118,brand_title_71,brand_title_Complices
-119,brand_title_72,brand_title_Converse
-120,brand_title_73,brand_title_CoolCat
-121,brand_title_74,brand_title_Cop Copine
-122,brand_title_75,brand_title_Courir
-123,brand_title_76,brand_title_Crockett & Jones
-124,brand_title_77,brand_title_DDP
-125,brand_title_78,brand_title_DI LOREN
-126,brand_title_79,brand_title_DMJ
-127,brand_title_80,brand_title_Daphnea
-128,brand_title_81,brand_title_Decathlon
-129,brand_title_82,brand_title_Denim Co
-130,brand_title_83,brand_title_Denver
-131,brand_title_84,brand_title_Desavre
-132,brand_title_85,brand_title_Desigual
-133,brand_title_86,brand_title_Diadora
-134,brand_title_87,brand_title_Dickies
-135,brand_title_88,brand_title_Diesel
-136,brand_title_89,brand_title_Disney
-137,brand_title_90,brand_title_Dolce & Gabbana
-138,brand_title_91,brand_title_Donaldson
-139,brand_title_92,brand_title_Dr. Martens
-140,brand_title_93,brand_title_Dries van Noten
-141,brand_title_94,brand_title_Dsquared2
-142,brand_title_95,brand_title_EL GANSO
-143,brand_title_96,brand_title_El Corte Inglés
-144,brand_title_97,brand_title_Eldys
-145,brand_title_98,brand_title_Element
-146,brand_title_99,brand_title_Elevenparis
-147,brand_title_100,brand_title_Elliot James
-148,brand_title_101,brand_title_Emma & Ella
-149,brand_title_102,brand_title_Emporio Armani
-150,brand_title_103,brand_title_Encuentro
-151,brand_title_104,brand_title_Episode
-152,brand_title_105,brand_title_Esprit
-153,brand_title_106,brand_title_Essentiel Antwerp
-154,brand_title_107,brand_title_Etam
-155,brand_title_108,brand_title_FB Sister
-156,brand_title_109,brand_title_FILA
-157,brand_title_110,brand_title_FPC
-158,brand_title_111,brand_title_FRANCESCHETTI
-159,brand_title_112,brand_title_FRUTTA
-160,brand_title_113,brand_title_Fashion
-161,brand_title_114,brand_title_Femme
-162,brand_title_115,brand_title_Filling Pieces
-163,brand_title_116,brand_title_Finsbury
-164,brand_title_117,brand_title_Flags & Cup
-165,brand_title_118,brand_title_Fosco
-166,brand_title_119,brand_title_Fred Perry
-167,brand_title_120,brand_title_Free Time
-168,brand_title_121,brand_title_Freequent
-169,brand_title_122,brand_title_Funny
-170,brand_title_123,brand_title_Fursac
-171,brand_title_124,brand_title_GAP
-172,brand_title_125,brand_title_GUESS
-173,brand_title_126,brand_title_Gaastra
-174,brand_title_127,brand_title_Ganni
-175,brand_title_128,brand_title_Garcia
-176,brand_title_129,brand_title_Georges Franck
-177,brand_title_130,brand_title_Geox
-178,brand_title_131,brand_title_Grain de Malice
-179,brand_title_132,brand_title_Grenson
-180,brand_title_133,brand_title_Gucci
-181,brand_title_134,brand_title_H&M
-182,brand_title_135,brand_title_H&M Divided
-183,brand_title_136,brand_title_Haix
-184,brand_title_137,brand_title_Han wag
-185,brand_title_138,brand_title_Harmont & Blaine
-186,brand_title_139,brand_title_Havaianas
-187,brand_title_140,brand_title_Hidnander
-188,brand_title_141,brand_title_Hogan
-189,brand_title_142,brand_title_Hoka
-190,brand_title_143,brand_title_Hollister
-191,brand_title_144,brand_title_Hugo Boss
-192,brand_title_145,brand_title_Impact
-193,brand_title_146,brand_title_In Extenso
-194,brand_title_147,brand_title_Inside
-195,brand_title_148,brand_title_Iturri
-196,brand_title_149,brand_title_Jack
-197,brand_title_150,brand_title_Jacqueline Riu
-198,brand_title_151,brand_title_Jennifer
-199,brand_title_152,brand_title_Jennyfer
-200,brand_title_153,brand_title_Jordan
-201,brand_title_154,brand_title_Jules
-202,brand_title_155,brand_title_Just Cavalli
-203,brand_title_156,brand_title_K-Way
-204,brand_title_157,brand_title_KOOKAÏ
-205,brand_title_158,brand_title_Kaporal
-206,brand_title_159,brand_title_Karl Lagerfeld
-207,brand_title_160,brand_title_Kenzo
-208,brand_title_161,brand_title_Kiabi
-209,brand_title_162,brand_title_Kiliwatch
-210,brand_title_163,brand_title_LLDR Women
-211,brand_title_164,brand_title_La Halle
-212,brand_title_165,brand_title_Lacoste
-213,brand_title_166,brand_title_Latte Mamiato
-214,brand_title_167,brand_title_Le Temps des Cerises
-215,brand_title_168,brand_title_Lefties
-216,brand_title_169,brand_title_Les Copains
-217,brand_title_170,brand_title_Les Deux
-218,brand_title_171,brand_title_Levi Strauss & Co.
-219,brand_title_172,brand_title_Levi's
-220,brand_title_173,brand_title_Liu Jo
-221,brand_title_174,brand_title_Local
-222,brand_title_175,brand_title_Loding
-223,brand_title_176,brand_title_LolaLiza
-224,brand_title_177,brand_title_Looney Tunes
-225,brand_title_178,brand_title_Lotto
-226,brand_title_179,brand_title_Ludey
-227,brand_title_180,brand_title_Lumberjack
-228,brand_title_181,brand_title_M by Mosquitos
-229,brand_title_182,brand_title_M&V
-230,brand_title_183,brand_title_MAUDD
-231,brand_title_184,brand_title_MC2 Saint Barth
-232,brand_title_185,brand_title_MEERMIN
-233,brand_title_186,brand_title_Magnum
-234,brand_title_187,brand_title_Maje
-235,brand_title_188,brand_title_Manfield
-236,brand_title_189,brand_title_Mango
-237,brand_title_190,brand_title_Marc O'Polo
-238,brand_title_191,brand_title_Marina Yachting
-239,brand_title_192,brand_title_Marvel
-240,brand_title_193,brand_title_Massimo Dutti
-241,brand_title_194,brand_title_Mauro Grifoni
-242,brand_title_195,brand_title_Melanie Martinez
-243,brand_title_196,brand_title_Mercedes
-244,brand_title_197,brand_title_Mim
-245,brand_title_198,brand_title_Minelli
-246,brand_title_199,brand_title_Mixerí
-247,brand_title_200,brand_title_Momenti
-248,brand_title_201,brand_title_Mona
-249,brand_title_202,brand_title_Monki
-250,brand_title_203,brand_title_Monster
-251,brand_title_204,brand_title_Montepicaza
-252,brand_title_205,brand_title_Moon Boot
-253,brand_title_206,brand_title_Morgan
-254,brand_title_207,brand_title_Moschino
-255,brand_title_208,brand_title_Mr. Blue
-256,brand_title_209,brand_title_Musto
-257,brand_title_210,brand_title_My Jewellery
-258,brand_title_211,brand_title_NASA
-259,brand_title_212,brand_title_NBA
-260,brand_title_213,brand_title_NN07
-261,brand_title_214,brand_title_NORDICA
-262,brand_title_215,brand_title_Naf Naf
-263,brand_title_216,brand_title_Nero Giardini
-264,brand_title_217,brand_title_New Balance
-265,brand_title_218,brand_title_New Era
-266,brand_title_219,brand_title_New York Yankees
-267,brand_title_220,brand_title_New Yorker
-268,brand_title_221,brand_title_Newtone
-269,brand_title_222,brand_title_Nike
-270,brand_title_223,brand_title_Nike Air
-271,brand_title_224,brand_title_Nordic
-272,brand_title_225,brand_title_Noël
-273,brand_title_226,brand_title_Npo
-274,brand_title_227,brand_title_Nude Project
-275,brand_title_228,brand_title_ONLY
-276,brand_title_229,brand_title_OPUS
-277,brand_title_230,brand_title_Oakley
-278,brand_title_231,brand_title_PT-shoes
-279,brand_title_232,brand_title_Pascal Morabito
-280,brand_title_233,brand_title_Paul & Shark
-281,brand_title_234,brand_title_Paul Smith
-282,brand_title_235,brand_title_Pause Café
-283,brand_title_236,brand_title_Pepe Jeans
-284,brand_title_237,brand_title_Pieces
-285,brand_title_238,brand_title_Pierre Cardin
-286,brand_title_239,brand_title_Pimkie
-287,brand_title_240,brand_title_Pink Floyd
-288,brand_title_241,brand_title_Play
-289,brand_title_242,brand_title_Playmobil
-290,brand_title_243,brand_title_Polo Club
-291,brand_title_244,brand_title_Polo Ralph Lauren
-292,brand_title_245,brand_title_Prada
-293,brand_title_246,brand_title_Premiata
-294,brand_title_247,brand_title_Primark
-295,brand_title_248,brand_title_Promod
-296,brand_title_249,brand_title_Pull & Bear
-297,brand_title_250,brand_title_Puma
-298,brand_title_251,brand_title_Queen
-299,brand_title_252,brand_title_Quiksilver
-300,brand_title_253,brand_title_Ralph Lauren
-301,brand_title_254,brand_title_Real Madrid
-302,brand_title_255,brand_title_Reiss
-303,brand_title_256,brand_title_Richmond
-304,brand_title_257,brand_title_Rick Owens
-305,brand_title_258,brand_title_Rip Curl
-306,brand_title_259,brand_title_Rivieras
-307,brand_title_260,brand_title_Rockport
-308,brand_title_261,brand_title_Roly
-309,brand_title_262,brand_title_Rudy's
-310,brand_title_263,brand_title_Ruixiang
-311,brand_title_264,brand_title_SIXTY
-312,brand_title_265,brand_title_Saint James
-313,brand_title_266,brand_title_Salomon
-314,brand_title_267,brand_title_Salomon X Ward Leather GTX
-315,brand_title_268,brand_title_Sara Lindholm
-316,brand_title_269,brand_title_Saucony
-317,brand_title_270,brand_title_See U Soon
-318,brand_title_271,brand_title_Selected Homme
-319,brand_title_272,brand_title_Serge Blanco
-320,brand_title_273,brand_title_Set
-321,brand_title_274,brand_title_Shein
-322,brand_title_275,brand_title_Sisley
-323,brand_title_276,brand_title_Slazenger
-324,brand_title_277,brand_title_Sneakers
-325,brand_title_278,brand_title_Stradivarius
-326,brand_title_279,brand_title_Stüssy
-327,brand_title_280,brand_title_Subdued
-328,brand_title_281,brand_title_Sun68
-329,brand_title_282,brand_title_Super Mario
-330,brand_title_283,brand_title_Super U
-331,brand_title_284,brand_title_Superdry
-332,brand_title_285,brand_title_Superga
-333,brand_title_286,brand_title_Superman
-334,brand_title_287,brand_title_Superstar
-335,brand_title_288,brand_title_Supply & Demand
-336,brand_title_289,brand_title_Supreme
-337,brand_title_290,brand_title_Sézane
-338,brand_title_291,brand_title_TEX
-339,brand_title_292,brand_title_Tally Weijl
-340,brand_title_293,brand_title_Ted Lapidus
-341,brand_title_294,brand_title_Tenth
-342,brand_title_295,brand_title_Terranova
-343,brand_title_296,brand_title_The Kooples
-344,brand_title_297,brand_title_The North Face
-345,brand_title_298,brand_title_Timberland
-346,brand_title_299,brand_title_Tissaia
-347,brand_title_300,brand_title_Tod's
-348,brand_title_301,brand_title_Tom Tailor
-349,brand_title_302,brand_title_Tommy Hilfiger
-350,brand_title_303,brand_title_Trespass
-351,brand_title_304,brand_title_Tricots du Rocher
-352,brand_title_305,brand_title_U-Power
-353,brand_title_306,brand_title_U.S. Polo Assn.
-354,brand_title_307,brand_title_UGG
-355,brand_title_308,brand_title_US.Marshall
-356,brand_title_309,brand_title_Under Armour
-357,brand_title_310,brand_title_Undiz
-358,brand_title_311,brand_title_Uomo
-359,brand_title_312,brand_title_Van Bommel
-360,brand_title_313,brand_title_Vans
-361,brand_title_314,brand_title_Vera Pelle
-362,brand_title_315,brand_title_Vero Moda
-363,brand_title_316,brand_title_Vintage
-364,brand_title_317,brand_title_Vogue
-365,brand_title_318,brand_title_WE
-366,brand_title_319,brand_title_WOMAN
-367,brand_title_320,brand_title_Wed'ze
-368,brand_title_321,brand_title_Weekend Max Mara
-369,brand_title_322,brand_title_XOOS
-370,brand_title_323,brand_title_XQXAYJR
-371,brand_title_324,brand_title_Y-3
-372,brand_title_325,brand_title_Ydence
-373,brand_title_326,brand_title_Yeezy
-374,brand_title_327,brand_title_Zadig & Voltaire
-375,brand_title_328,brand_title_Zanzea
-376,brand_title_329,brand_title_Zapateria
-377,brand_title_330,brand_title_Zara
-378,brand_title_331,brand_title_adidas
-379,brand_title_332,brand_title_b.young
-380,brand_title_333,brand_title_bruschi
-381,brand_title_334,brand_title_de simon
-382,brand_title_335,brand_title_desconocida
-383,brand_title_336,brand_title_elliot et james
-384,brand_title_337,brand_title_giordano basso
-385,brand_title_338,brand_title_goldsmith
-386,brand_title_339,brand_title_jck and jns
-387,brand_title_340,brand_title_made in Turkey
-388,brand_title_341,brand_title_motivi
-389,brand_title_342,brand_title_mysa
-390,brand_title_343,brand_title_obak
-391,brand_title_344,brand_title_plusieurs marque
-392,brand_title_345,brand_title_roberto serpentini
-393,brand_title_346,brand_title_sab.tattoo
-394,brand_title_347,brand_title_sans marque
-395,brand_title_348,brand_title_sansnom.
-396,brand_title_349,brand_title_scalpers
-397,brand_title_350,brand_title_sin marca
-398,brand_title_351,brand_title_swat
-399,catalog_id_0,
-400,catalog_id_1,
-401,catalog_id_2,
+45,status_0,status
+46,brand_title_0,brand_title_
+47,brand_title_1,brand_title_4205
+48,brand_title_2,brand_title_AC/DC
+49,brand_title_3,brand_title_ALEXANDER
+50,brand_title_4,brand_title_ALF
+51,brand_title_5,brand_title_AM Shoe Company
+52,brand_title_6,brand_title_Aglini
+53,brand_title_7,brand_title_Air Force
+54,brand_title_8,brand_title_Ambitious
+55,brand_title_9,brand_title_American Company
+56,brand_title_10,brand_title_Ami Paris
+57,brand_title_11,brand_title_Amisu
+58,brand_title_12,brand_title_Angelo Litrico
+59,brand_title_13,brand_title_Anine Bing
+60,brand_title_14,brand_title_Anne Valerie Hash
+61,brand_title_15,brand_title_Arche
+62,brand_title_16,brand_title_Argentina
+63,brand_title_17,brand_title_Armani
+64,brand_title_18,brand_title_Armor-Lux
+65,brand_title_19,brand_title_Artesano
+66,brand_title_20,brand_title_Asics
+67,brand_title_21,brand_title_Atmosphere
+68,brand_title_22,brand_title_Autre Chose
+69,brand_title_23,brand_title_Axo
+70,brand_title_24,brand_title_BZB
+71,brand_title_25,brand_title_Bershka
+72,brand_title_26,brand_title_Betty Barclay
+73,brand_title_27,brand_title_Bexley
+74,brand_title_28,brand_title_Bien Blue
+75,brand_title_29,brand_title_Bizzbee
+76,brand_title_30,brand_title_Black Mojito
+77,brand_title_31,brand_title_Blanca
+78,brand_title_32,brand_title_Blancheporte
+79,brand_title_33,brand_title_Blauer
+80,brand_title_34,brand_title_Bloom
+81,brand_title_35,brand_title_Blue Steel
+82,brand_title_36,brand_title_Blundstone
+83,brand_title_37,brand_title_Bonobo
+84,brand_title_38,brand_title_Boots
+85,brand_title_39,brand_title_Bordeaux
+86,brand_title_40,brand_title_Boutique Parisienne
+87,brand_title_41,brand_title_Brandy Melville
+88,brand_title_42,brand_title_Brigitte Saget
+89,brand_title_43,brand_title_Brooks
+90,brand_title_44,brand_title_Brooks Brothers
+91,brand_title_45,brand_title_Buffalo
+92,brand_title_46,brand_title_Burberry
+93,brand_title_47,brand_title_Burger King
+94,brand_title_48,brand_title_Burton
+95,brand_title_49,brand_title_C&A
+96,brand_title_50,brand_title_CC Collection
+97,brand_title_51,brand_title_CHC-Shoes
+98,brand_title_52,brand_title_COS
+99,brand_title_53,brand_title_CSB
+100,brand_title_54,brand_title_Cabestan
+101,brand_title_55,brand_title_Cache Cache
+102,brand_title_56,brand_title_Calvin Klein
+103,brand_title_57,brand_title_Calvin Klein Jeans
+104,brand_title_58,brand_title_Camaïeu
+105,brand_title_59,brand_title_Camper
+106,brand_title_60,brand_title_Captain Tortue
+107,brand_title_61,brand_title_Carolina Herrera
+108,brand_title_62,brand_title_Cavallaro Napoli
+109,brand_title_63,brand_title_Celio
+110,brand_title_64,brand_title_Champion
+111,brand_title_65,brand_title_Charapa
+112,brand_title_66,brand_title_Chevignon
+113,brand_title_67,brand_title_Cintre à cintre
+114,brand_title_68,brand_title_Citylife
+115,brand_title_69,brand_title_Clark
+116,brand_title_70,brand_title_Clarks
+117,brand_title_71,brand_title_Clarks Originals
+118,brand_title_72,brand_title_Claudie Pierlot
+119,brand_title_73,brand_title_Clockhouse
+120,brand_title_74,brand_title_Cloothes
+121,brand_title_75,brand_title_Coca-Cola
+122,brand_title_76,brand_title_Complices
+123,brand_title_77,brand_title_Converse
+124,brand_title_78,brand_title_Cop Copine
+125,brand_title_79,brand_title_Crivit
+126,brand_title_80,brand_title_Crockett & Jones
+127,brand_title_81,brand_title_DDP
+128,brand_title_82,brand_title_Damart
+129,brand_title_83,brand_title_Daphnea
+130,brand_title_84,brand_title_Dare
+131,brand_title_85,brand_title_Decathlon
+132,brand_title_86,brand_title_Denim Co
+133,brand_title_87,brand_title_Denver
+134,brand_title_88,brand_title_Desigual
+135,brand_title_89,brand_title_Di-Bye
+136,brand_title_90,brand_title_Diadora
+137,brand_title_91,brand_title_Dickies
+138,brand_title_92,brand_title_Diesel
+139,brand_title_93,brand_title_Disney
+140,brand_title_94,brand_title_Dolce & Gabbana
+141,brand_title_95,brand_title_Dr. Martens
+142,brand_title_96,brand_title_Dries van Noten
+143,brand_title_97,brand_title_Dsquared2
+144,brand_title_98,brand_title_EL GANSO
+145,brand_title_99,brand_title_Eden Park
+146,brand_title_100,brand_title_El Corte Inglés
+147,brand_title_101,brand_title_Ellesse
+148,brand_title_102,brand_title_Elliot James
+149,brand_title_103,brand_title_Emporio Armani
+150,brand_title_104,brand_title_Episode
+151,brand_title_105,brand_title_Esmara
+152,brand_title_106,brand_title_Esprit
+153,brand_title_107,brand_title_Essentiel Antwerp
+154,brand_title_108,brand_title_Everlast
+155,brand_title_109,brand_title_FRANCESCHETTI
+156,brand_title_110,brand_title_FSBN
+157,brand_title_111,brand_title_FSTVL
+158,brand_title_112,brand_title_Fabi
+159,brand_title_113,brand_title_Fabienne Chapot
+160,brand_title_114,brand_title_Fanta
+161,brand_title_115,brand_title_Farah
+162,brand_title_116,brand_title_Fashion Victim
+163,brand_title_117,brand_title_Finsbury
+164,brand_title_118,brand_title_Fosco
+165,brand_title_119,brand_title_Fred Perry
+166,brand_title_120,brand_title_Free Time
+167,brand_title_121,brand_title_Fursac
+168,brand_title_122,brand_title_G-Star
+169,brand_title_123,brand_title_G.LS Shoes
+170,brand_title_124,brand_title_GUESS
+171,brand_title_125,brand_title_Ganni
+172,brand_title_126,brand_title_George
+173,brand_title_127,brand_title_Geox
+174,brand_title_128,brand_title_Gerry Weber
+175,brand_title_129,brand_title_Gold & Silver
+176,brand_title_130,brand_title_Grenson
+177,brand_title_131,brand_title_Gucci
+178,brand_title_132,brand_title_Gémo
+179,brand_title_133,brand_title_H&M
+180,brand_title_134,brand_title_Hackett
+181,brand_title_135,brand_title_Haix
+182,brand_title_136,brand_title_Han wag
+183,brand_title_137,brand_title_Harmont & Blaine
+184,brand_title_138,brand_title_Herbalife
+185,brand_title_139,brand_title_Hidnander
+186,brand_title_140,brand_title_Hogan
+187,brand_title_141,brand_title_Hollister
+188,brand_title_142,brand_title_Hugo Boss
+189,brand_title_143,brand_title_Impact
+190,brand_title_144,brand_title_Imperial
+191,brand_title_145,brand_title_Inconnu
+192,brand_title_146,brand_title_Inditex
+193,brand_title_147,brand_title_Iturri
+194,brand_title_148,brand_title_JSP
+195,brand_title_149,brand_title_Jacqueline de Yong
+196,brand_title_150,brand_title_Jennyfer
+197,brand_title_151,brand_title_Jordan
+198,brand_title_152,brand_title_Joules
+199,brand_title_153,brand_title_Jules
+200,brand_title_154,brand_title_Just Cavalli
+201,brand_title_155,brand_title_K-Way
+202,brand_title_156,brand_title_Kalenji
+203,brand_title_157,brand_title_Kaporal
+204,brand_title_158,brand_title_Karl Kani
+205,brand_title_159,brand_title_Karl Lagerfeld
+206,brand_title_160,brand_title_Karl Marc John
+207,brand_title_161,brand_title_Kenzo
+208,brand_title_162,brand_title_Kiabi
+209,brand_title_163,brand_title_King Louie
+210,brand_title_164,brand_title_LBO
+211,brand_title_165,brand_title_Lacoste
+212,brand_title_166,brand_title_Latte Mamiato
+213,brand_title_167,brand_title_Le Coq Sportif
+214,brand_title_168,brand_title_Le Temps des Cerises
+215,brand_title_169,brand_title_Lefties
+216,brand_title_170,brand_title_Leonard
+217,brand_title_171,brand_title_Les Copains
+218,brand_title_172,brand_title_Les Deux
+219,brand_title_173,brand_title_Levi's
+220,brand_title_174,brand_title_Liu Jo
+221,brand_title_175,brand_title_Liz McCoy
+222,brand_title_176,brand_title_Local
+223,brand_title_177,brand_title_Loding
+224,brand_title_178,brand_title_LolaLiza
+225,brand_title_179,brand_title_Lost
+226,brand_title_180,brand_title_Ludey
+227,brand_title_181,brand_title_Lumberjack
+228,brand_title_182,brand_title_MC2 Saint Barth
+229,brand_title_183,brand_title_MEERMIN
+230,brand_title_184,brand_title_MIZUNO
+231,brand_title_185,brand_title_MTX
+232,brand_title_186,brand_title_Magnum
+233,brand_title_187,brand_title_Maison 123
+234,brand_title_188,brand_title_Maje
+235,brand_title_189,brand_title_Manfield
+236,brand_title_190,brand_title_Mango
+237,brand_title_191,brand_title_Marc O'Polo
+238,brand_title_192,brand_title_Marche
+239,brand_title_193,brand_title_Martinelli
+240,brand_title_194,brand_title_Marvel
+241,brand_title_195,brand_title_Massimo Dutti
+242,brand_title_196,brand_title_Mauro Grifoni
+243,brand_title_197,brand_title_Mavi
+244,brand_title_198,brand_title_Max
+245,brand_title_199,brand_title_McKenzie
+246,brand_title_200,brand_title_Melanie Martinez
+247,brand_title_201,brand_title_Mercedes
+248,brand_title_202,brand_title_Monoprix
+249,brand_title_203,brand_title_Monster
+250,brand_title_204,brand_title_Montepicaza
+251,brand_title_205,brand_title_Moon Boot
+252,brand_title_206,brand_title_Morgan
+253,brand_title_207,brand_title_Mosquitos
+254,brand_title_208,brand_title_Musto
+255,brand_title_209,brand_title_NACIONAL
+256,brand_title_210,brand_title_NBA
+257,brand_title_211,brand_title_NN07
+258,brand_title_212,brand_title_NORDICA
+259,brand_title_213,brand_title_New Balance
+260,brand_title_214,brand_title_New Era
+261,brand_title_215,brand_title_New Jersey
+262,brand_title_216,brand_title_New York Yankees
+263,brand_title_217,brand_title_New Yorker
+264,brand_title_218,brand_title_Newtone
+265,brand_title_219,brand_title_Nike
+266,brand_title_220,brand_title_Nike Air
+267,brand_title_221,brand_title_Nike SB
+268,brand_title_222,brand_title_No Excuse
+269,brand_title_223,brand_title_Noir
+270,brand_title_224,brand_title_Nordic
+271,brand_title_225,brand_title_Noël
+272,brand_title_226,brand_title_Nude Project
+273,brand_title_227,brand_title_ONLY
+274,brand_title_228,brand_title_Oxbow
+275,brand_title_229,brand_title_Oxylane
+276,brand_title_230,brand_title_PT-shoes
+277,brand_title_231,brand_title_Patagonia
+278,brand_title_232,brand_title_Paul & Shark
+279,brand_title_233,brand_title_Paul Smith
+280,brand_title_234,brand_title_Petit Bateau
+281,brand_title_235,brand_title_Phildar
+282,brand_title_236,brand_title_Pimkie
+283,brand_title_237,brand_title_Play
+284,brand_title_238,brand_title_Pois
+285,brand_title_239,brand_title_Polinesia
+286,brand_title_240,brand_title_Polo Ralph Lauren
+287,brand_title_241,brand_title_Prada
+288,brand_title_242,brand_title_Premiata
+289,brand_title_243,brand_title_Primark
+290,brand_title_244,brand_title_Project X Paris
+291,brand_title_245,brand_title_Promod
+292,brand_title_246,brand_title_Pull & Bear
+293,brand_title_247,brand_title_Puma
+294,brand_title_248,brand_title_RAW
+295,brand_title_249,brand_title_Ralph Lauren
+296,brand_title_250,brand_title_Real Madrid
+297,brand_title_251,brand_title_Redefined Rebel
+298,brand_title_252,brand_title_Reiss
+299,brand_title_253,brand_title_Richmond
+300,brand_title_254,brand_title_Rick Owens
+301,brand_title_255,brand_title_Rip Curl
+302,brand_title_256,brand_title_Rivieras
+303,brand_title_257,brand_title_Rockport
+304,brand_title_258,brand_title_Roly
+305,brand_title_259,brand_title_Roxy
+306,brand_title_260,brand_title_Rudy's
+307,brand_title_261,brand_title_Ruixiang
+308,brand_title_262,brand_title_SIXTY
+309,brand_title_263,brand_title_SLIM FIT
+310,brand_title_264,brand_title_Salomon
+311,brand_title_265,brand_title_Salomon X Ward Leather GTX
+312,brand_title_266,brand_title_San Marina
+313,brand_title_267,brand_title_Santa Cruz
+314,brand_title_268,brand_title_Sara Lindholm
+315,brand_title_269,brand_title_Saucony
+316,brand_title_270,brand_title_Scarpe
+317,brand_title_271,brand_title_Season
+318,brand_title_272,brand_title_Sem
+319,brand_title_273,brand_title_Shana
+320,brand_title_274,brand_title_Shanna
+321,brand_title_275,brand_title_Shein
+322,brand_title_276,brand_title_Sisley
+323,brand_title_277,brand_title_Sneakers
+324,brand_title_278,brand_title_Sport
+325,brand_title_279,brand_title_State of Art
+326,brand_title_280,brand_title_Stradivarius
+327,brand_title_281,brand_title_Stranger Things
+328,brand_title_282,brand_title_Stüssy
+329,brand_title_283,brand_title_Subdued
+330,brand_title_284,brand_title_Sublime
+331,brand_title_285,brand_title_Summum
+332,brand_title_286,brand_title_Sun68
+333,brand_title_287,brand_title_Superdry
+334,brand_title_288,brand_title_Superga
+335,brand_title_289,brand_title_Supply & Demand
+336,brand_title_290,brand_title_Supreme
+337,brand_title_291,brand_title_Sézane
+338,brand_title_292,brand_title_TEX
+339,brand_title_293,brand_title_TQ Gold
+340,brand_title_294,brand_title_Ted Lapidus
+341,brand_title_295,brand_title_Tenth
+342,brand_title_296,brand_title_Tezenis
+343,brand_title_297,brand_title_The North Face
+344,brand_title_298,brand_title_The signature club
+345,brand_title_299,brand_title_Timberland
+346,brand_title_300,brand_title_Tissaia
+347,brand_title_301,brand_title_Tod's
+348,brand_title_302,brand_title_Tommy Hilfiger
+349,brand_title_303,brand_title_Top Vintage
+350,brand_title_304,brand_title_Trespass
+351,brand_title_305,brand_title_Twoday
+352,brand_title_306,brand_title_U-Power
+353,brand_title_307,brand_title_U.S. Polo Assn.
+354,brand_title_308,brand_title_UGG
+355,brand_title_309,brand_title_UP
+356,brand_title_310,brand_title_Under Armour
+357,brand_title_311,brand_title_Undiz
+358,brand_title_312,brand_title_Uomo
+359,brand_title_313,brand_title_Van Bommel
+360,brand_title_314,brand_title_Vans
+361,brand_title_315,brand_title_Venca
+362,brand_title_316,brand_title_Vera Pelle
+363,brand_title_317,brand_title_Vero Moda
+364,brand_title_318,brand_title_Vintage
+365,brand_title_319,brand_title_Vintage Dressing
+366,brand_title_320,brand_title_WOMAN
+367,brand_title_321,brand_title_Weekend Max Mara
+368,brand_title_322,brand_title_Wild Fable
+369,brand_title_323,brand_title_XQXAYJR
+370,brand_title_324,brand_title_Y-3
+371,brand_title_325,brand_title_Ydence
+372,brand_title_326,brand_title_Yeezy
+373,brand_title_327,brand_title_Yessica
+374,brand_title_328,brand_title_Yves Dorsey
+375,brand_title_329,brand_title_Zadig & Voltaire
+376,brand_title_330,brand_title_Zapateria
+377,brand_title_331,brand_title_Zara
+378,brand_title_332,brand_title_Zeeman
+379,brand_title_333,brand_title_Zumba
+380,brand_title_334,brand_title_adidas
+381,brand_title_335,brand_title_aucune
+382,brand_title_336,brand_title_bruschi
+383,brand_title_337,brand_title_chlod
+384,brand_title_338,brand_title_de simon
+385,brand_title_339,brand_title_dilling
+386,brand_title_340,brand_title_franc Anna
+387,brand_title_341,brand_title_mysa
+388,brand_title_342,brand_title_obak
+389,brand_title_343,brand_title_plusieurs marque
+390,brand_title_344,brand_title_sab.tattoo
+391,brand_title_345,brand_title_sans marque
+392,brand_title_346,brand_title_sansnom.
+393,brand_title_347,brand_title_scalpers
+394,brand_title_348,brand_title_sin marca
+395,brand_title_349,brand_title_swat
+396,brand_title_350,brand_title_vctry
+397,brand_title_351,brand_title_vzxv
+398,catalog_id_0,
+399,catalog_id_1,
+400,catalog_id_2,

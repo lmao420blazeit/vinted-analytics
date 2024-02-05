@@ -158,11 +158,15 @@ import shap
 
 #model = best_lr_model.fit(X_test, y_test)
 
-explainer = shap.LinearExplainer(best_lr_model, X_train)
+explainer = shap.LinearExplainer(best_lr_model, X_train, model_output='probability')
 shap_values = explainer.shap_values(X_test)
+print(shap_values)
 
-shap.summary_plot(shap_values, X_test, feature_names=cols, model_output='probability')
-
-clust = shap.utils.hclust(X_test, y_test, linkage="single")
+shap.summary_plot(shap_values, 
+                  X_test)
+plt.show()
+clust = shap.utils.hclust(X_test, 
+                          y_test, 
+                          linkage="single")
 shap.plots.bar(shap_values, clustering=clust, clustering_cutoff=1)
 plt.show()
