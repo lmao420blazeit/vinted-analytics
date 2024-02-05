@@ -5,6 +5,8 @@ The purpose of this project is to find key insights about data from Vinted which
 ##### Price concerns
 - What are the price ranges for each article?
     -> price suggestion system based on size, status and brand, sampling and confidence intervals
+        - suggestions based on price distribution and median prices
+        - suggestions based on saleability metrics (not yet possible to implement)
 - How article labels, such as size, brands and status relate to price dynamics?
 
 ##### Saleability concerns
@@ -15,8 +17,9 @@ The purpose of this project is to find key insights about data from Vinted which
 ##### Other
 
 - Tracking data drift by monitoring flow metadata and Kullback-Leibler Divergence (difference between distributions accross timeframes)
-    -> Tracking proportion differences between categorical variables
+    -> Tracking proportions in categorical variables
     -> Tracking KL divergence for numerical variables
+- Price sensitivity to item condition per catalog
 
 ## Roadmap
 
@@ -31,7 +34,7 @@ The purpose of this project is to find key insights about data from Vinted which
 
 - [ ] Work on the dashboard
 - [ ] Develop a pipeline to track saleability
-- [ ] Develop a pipeline to track brand and catalog_id statistics
+- [ ] Develop a pipeline to track brand, catalog_id, colour statistics
 - [ ] Cluster catalog_id's into groups
 - [ ] Create dim tables for brands, sizes and colours
 - [ ] Normalize the database
@@ -64,12 +67,22 @@ The purpose of this project is to find key insights about data from Vinted which
     - Export data to pg
     - Export samples to pg
 
+## Dashboard
+
+Currently just a few descriptive simple graphs. No callback functions.
+
+** Brands **
+![Local Image](assets/dashboard_brands.png)
+
+** Status **
+![Local Image](assets/dashboard_status.png)
+
 ## Findings
 
 ### How article status conditions price
 
 Tukey HSD is often used as an extension of ANOVA (post-hoc test) to compare means between 2 groups. Caveat: does not take into account covariates (the effects of labels)
-There is a significant difference between all groups except Bom Satisfatório.
+There is a significant difference between all groups except Bom Satisfatório. Makes sense to do HSD test per catalog.
 
 **Tukeys HSD test**
 

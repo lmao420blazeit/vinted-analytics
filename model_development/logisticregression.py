@@ -136,7 +136,7 @@ print(len(cols))
 #coefficients_df = pd.DataFrame({'Feature': cols, 'Coefficient': best_lr_model.coef_[0]})
 #coefficients_df = coefficients_df.sort_values(by='Coefficient', ascending=False).head(10)
 #print(coefficients_df)
-
+"""
 joblib.dump(best_lr_model, 
             'model_development/model_artifacts/logisticregression.pkl')
 
@@ -153,10 +153,9 @@ roc = RocCurveDisplay.from_estimator(gs_lr.best_estimator_, X_test, y_test,
                                name="Logistic Regression",
                                ax=axs)
 
-
+"""
+"""
 import shap
-
-#model = best_lr_model.fit(X_test, y_test)
 
 explainer = shap.LinearExplainer(best_lr_model, X_train, model_output='probability')
 shap_values = explainer.shap_values(X_test)
@@ -165,8 +164,4 @@ print(shap_values)
 shap.summary_plot(shap_values, 
                   X_test)
 plt.show()
-clust = shap.utils.hclust(X_test, 
-                          y_test, 
-                          linkage="single")
-shap.plots.bar(shap_values, clustering=clust, clustering_cutoff=1)
-plt.show()
+"""

@@ -17,6 +17,7 @@ def load_data():
 # Main function
 def main():
     st.set_page_config(layout="wide")
+    st.title("Overview")
 
     # Load data
     global products_catalog
@@ -28,7 +29,7 @@ def main():
         st.session_state.products_catalog = st.session_state.products_catalog[(st.session_state.products_catalog["price"] < q_high) & 
                                                                               (st.session_state.products_catalog["price"] > q_low)]
         
-    st.title("Brands")
+    st.subheader("Brands")
 
     price = st.session_state.products_catalog.groupby(["brand_title"])["price"].sum()
     price = price/price.sum()
@@ -70,7 +71,7 @@ def main():
     with col2:
         st.plotly_chart(fig, use_container_width=True) 
 
-    st.title("Status")
+    st.subheader("Status")
 
     col1, col2 = st.columns([0.7, 0.3])
 
@@ -102,13 +103,26 @@ def main():
     # do median with boxplot
     # do stacked bar with percentage of total count and price
 
-    brands = st.session_state.products_catalog.groupby(["status"])["product_id"].count().sort_values(ascending = False).head(20).reset_index()["status"]
+    status = st.session_state.products_catalog.groupby(["status"])["product_id"].count().sort_values(ascending = False).head(20).reset_index()["status"]
 
-    fig = px.box(st.session_state.products_catalog[st.session_state.products_catalog["status"].isin(brands)], 
+    fig = px.box(st.session_state.products_catalog[st.session_state.products_catalog["status"].isin(status)], 
                        y="price", 
                        color="status",
                        orientation="v",
                        title= "Status-price boxplot")
+    st.plotly_chart(fig, use_container_width=True) 
+
+    fig = px.treemap(st.session_state.products_catalog[st.session_state.products_catalog["brand_title"].isin(brands)], 
+                    path=['catalog_id', "brand_title"], 
+                    values='price'
+                    )
+    st.plotly_chart(fig, use_container_width=True) 
+
+    fig = px.icicle(st.session_state.products_catalog[st.session_state.products_catalog["brand_title"].isin(brands)], 
+                    path=[px.Constant("all"), 'catalog_id', 'brand_title', 'status'], 
+                    values='price')
+    fig.update_traces(root_color="lightgrey")
+    fig.update_layout(margin = dict(t=50, l=25, r=25, b=25))
     st.plotly_chart(fig, use_container_width=True) 
 
 

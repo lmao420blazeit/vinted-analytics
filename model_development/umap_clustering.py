@@ -9,7 +9,6 @@ import umap
 import umap.plot
 
 # a case study of sparse high dimensional data
-
 uri = 'postgresql://user:4202@localhost:5432/vinted-ai'
 engine = create_engine(uri)
 
@@ -17,19 +16,20 @@ engine = create_engine(uri)
 sql_query = "SELECT price, brand_title, catalog_id FROM public.products_catalog LIMIT 10000"
 data = pd.read_sql(sql_query, engine)
 
+# select top 50 brands and reduce dimensionality
 brands = data.groupby(["brand_title"])["price"].count().sort_values(ascending = False).head(50).reset_index()["brand_title"]
 data = data[data["brand_title"].isin(brands)]
 
 data["catalog_id"] = data["catalog_id"].astype("object")
 categorical = data.select_dtypes(include='object')
-categorical = pd.get_dummies(categorical)
+categorical = pd.get_dummies(categorical, dtype=float)
 
 #Embedding numerical & categorical
 fit1 = umap.UMAP(metric='l2').fit(data["price"].values.reshape(-1, 1))
 umap.plot.points(fit1, 
                  width=1000, 
                  height=1000, 
-                 labels = data.brand_title)
+                 labels = data.catalog_id)
 #plt.show()
 fit2 = umap.UMAP(metric='dice').fit(categorical)
 

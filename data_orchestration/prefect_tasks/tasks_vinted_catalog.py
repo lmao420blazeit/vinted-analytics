@@ -5,7 +5,7 @@ import datetime
 from os import path
 from prefect import task
 from prefect.context import FlowRunContext
-from ..utils import insert_on_conflict_nothing
+from ..utils import insert_on_conflict_nothing_user, insert_on_conflict_nothing
 from operator import itemgetter
 import re
 from prefect.artifacts import create_table_artifact
@@ -160,12 +160,12 @@ def export_sample_to_postgres(data: pd.DataFrame, sample_frac: float, engine) ->
     #schema_name = 'public'  # Specify the name of the schema to export data to
     table_name = 'samples'  # Specify the name of the table to export data to
 
-    data = data[["product_id", "catalog_id", "user_id", "date"]].groupby("catalog_id", group_keys=False).apply(lambda x: x.sample(frac = sample_frac))
+    data = data[["user_id", "catalog_id"]].groupby("catalog_id", group_keys=False).apply(lambda x: x.sample(frac = sample_frac))["user_id"]
     data.to_sql(table_name, 
                 engine, 
                 if_exists = "append", 
                 index = False, 
-                method = insert_on_conflict_nothing)
+                method = insert_on_conflict_nothing_user)
     
     return
 

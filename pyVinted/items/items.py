@@ -48,7 +48,36 @@ class Items:
         except HTTPError as err:
             raise err
         
-    def search_item(self, user_id, item_id, time: int = None, max_retries=3) -> pd.DataFrame:
+    def search_colors(self, max_retries = 3) -> pd.DataFrame:
+        
+        df_list = []
+        #params = self.parseUrl(url)
+        #url = f"{Urls.VINTED_BASE_URL}/{Urls.VINTED_API_URL}/{Urls.VINTED_PRODUCTS_ENDPOINT}?{urllib.parse.urlencode(params)}"
+        for i in range(1, 50):
+            url = f"https://www.vinted.pt/api/v2/catalog/items?color_ids[]={i}"
+            response = requester.get(url=url)
+            retries = 1
+            backoff_factor= random.randint(7, 11)
+
+            while retries <= max_retries:
+                sleep(backoff_factor**retries)
+                try:
+                    response.raise_for_status()
+                    items = response.json()
+                    
+                    df = pd.DataFrame({"catalog_total_items": [items["pagination"]["total_entries"]],
+                                    "color_id": [i]})
+                    df_list.append(df)
+
+                except HTTPError as err:
+                    raise err
+                
+            if retries == max_retries:
+                raise RuntimeError(f"Failed to make the HTTP request after {max_retries} retries.") 
+            
+            return (pd.concat(df_list, axis=0, ignore_index= True))
+
+    def search_item(self, user_id, time: int = None, max_retries=3) -> pd.DataFrame:
         """
         Retrieves items from a given search url on vinted.
 
@@ -58,7 +87,7 @@ class Items:
             page (int): Page number to be returned (default 1).
 
         """
-        endbyte = random.choice(["%00", "%0d%0a", "%0d", "%0a", "%09", "%0C"])
+        #endbyte = random.choice(["%00", "%0d%0a", "%0d", "%0a", "%09", "%0C"])
         user_agent = random.choice(["Mozilla/5.0 (Linux; Android 11; SM-G991B Build/RP1A.200720.012; wv) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.120 Mobile Safari/537.36",
                                     "Mozilla/5.0 (iPhone; CPU iPhone OS 14_6 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.1 Mobile/15E148 Safari/604.1",
                                     "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:89.0) Gecko/20100101 Firefox/89.0",
@@ -70,6 +99,7 @@ class Items:
         while retries <= max_retries:
             try:
                 sleep(backoff_factor**retries)
+                # rotating user agents
                 response = requester.get(url=url, headers = {"User-Agent": user_agent})
                 response.raise_for_status()
                 items = response.json()
@@ -77,12 +107,13 @@ class Items:
                 cols = ["id", "brand", "size", "catalog_id", "color1_id", "favourite_count", 
                         "view_count", "created_at_ts", "original_price_numeric", "price_numeric"]
                 # add; promoted_until, is_hidden, number of photos, description attributes (material)
-                for _item in items["items"]:         
-                    if _item["id"] == int(item_id):
-                        return pd.DataFrame.from_dict(_item, orient='index').T[cols]
+                df_list = []
+                for _item in items["items"]:     
+                    df_list.extend(pd.DataFrame.from_dict(_item, orient='index').T[cols])
                 
-                return pd.DataFrame(columns = cols,
-                                    data = [[item_id] + [np.NaN for x in range(len(cols)-1)]])
+                return pd.concat(df_list, ignore_index= True, axis = 0)
+                #return pd.DataFrame(columns = cols,
+                #                    data = [[item_id] + [np.NaN for x in range(len(cols)-1)]])
             
             except HTTPError as err:
                 print(err)
