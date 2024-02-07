@@ -9,8 +9,12 @@ from ..utils import insert_on_conflict_nothing_user, insert_on_conflict_nothing
 from operator import itemgetter
 import re
 from prefect.artifacts import create_table_artifact
+from prefect.tasks import exponential_backoff
 
-@task(name="Load from api", log_prints= True)
+@task(name=f"Load from api", 
+      log_prints= True,
+      retries=3, 
+      retry_delay_seconds=exponential_backoff(backoff_factor=6))
 def load_data_from_api(nbrRows: int, batch_size: int, item: List) -> pd.DataFrame:
     """
     Loads data from the Vinted API based on specified parameters.

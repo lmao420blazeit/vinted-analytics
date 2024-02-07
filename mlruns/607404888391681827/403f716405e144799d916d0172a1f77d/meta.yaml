@@ -1,0 +1,15 @@
+artifact_uri: file:///C:/Users/Miguel/Desktop/dataengineeringpr/vinted-prefect/mlruns/607404888391681827/403f716405e144799d916d0172a1f77d/artifacts
+end_time: 1707252361893
+entry_point_name: ''
+experiment_id: '607404888391681827'
+lifecycle_stage: active
+run_id: 403f716405e144799d916d0172a1f77d
+run_name: LogisticRegressor
+run_uuid: 403f716405e144799d916d0172a1f77d
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1707252361432
+status: 4
+tags: []
+user_id: Miguel

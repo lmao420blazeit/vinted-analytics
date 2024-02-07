@@ -8,6 +8,7 @@ import urllib
 import numpy as np
 import random
 from time import sleep
+import json
 
 class Items:
 
@@ -47,6 +48,7 @@ class Items:
 
         except HTTPError as err:
             raise err
+        
         
     def search_colors(self, max_retries = 3) -> pd.DataFrame:
         
@@ -100,18 +102,21 @@ class Items:
             try:
                 sleep(backoff_factor**retries)
                 # rotating user agents
-                response = requester.get(url=url, headers = {"User-Agent": user_agent})
+                response = requester.get(url=url, 
+                                         headers = {"User-Agent": user_agent})
+                print(response.headers) 
+                if response.status_code == 403:
+                    return
                 response.raise_for_status()
                 items = response.json()
 
                 cols = ["id", "brand", "size", "catalog_id", "color1_id", "favourite_count", 
                         "view_count", "created_at_ts", "original_price_numeric", "price_numeric"]
                 # add; promoted_until, is_hidden, number of photos, description attributes (material)
-                df_list = []
-                for _item in items["items"]:     
-                    df_list.extend(pd.DataFrame.from_dict(_item, orient='index').T[cols])
+                df = pd.DataFrame(items["items"])#.T
                 
-                return pd.concat(df_list, ignore_index= True, axis = 0)
+                print(df[cols])
+                return df[cols]
                 #return pd.DataFrame(columns = cols,
                 #                    data = [[item_id] + [np.NaN for x in range(len(cols)-1)]])
             
@@ -121,16 +126,38 @@ class Items:
 
         raise RuntimeError(f"Failed to make the HTTP request after {max_retries} retries.")
         
-    def search_all_brands(self):
-        url = f"{Urls.VINTED_BASE_URL}/{Urls.VINTED_API_URL}/brands"
-        response = requester.get(url=url)
+    def search_brands(self, max_retries = 3) -> pd.DataFrame:
+        
+        df_list = []
+        #params = self.parseUrl(url)
+        #url = f"{Urls.VINTED_BASE_URL}/{Urls.VINTED_API_URL}/{Urls.VINTED_PRODUCTS_ENDPOINT}?{urllib.parse.urlencode(params)}"
+        for i in range(1, 50):
+            url = f"https://www.vinted.pt/api/v2/catalog/items?brand_ids[]={str(i)}"
+            response = requester.get(url=url)
+            retries = 1
+            backoff_factor= random.randint(7, 12)
 
-        response.raise_for_status()
-        items = response.json()
-        
-        df = pd.DataFrame(items["brands"])
-        return (df)
-        
+            while retries <= max_retries:
+                sleep(backoff_factor**retries)
+                try:
+                    response.raise_for_status()
+                    items = response.json()
+                    
+                    df = pd.DataFrame(items["dominant_brand"])
+                    df_list.append(df)
+                    print(df)
+
+                except HTTPError as err:
+                    print(err)
+                    raise err
+                
+                except:
+                    return pd.concat(df_list, axis = 0, ignore_index=True)
+                
+            if retries == max_retries:
+                raise RuntimeError(f"Failed to make the HTTP request after {max_retries} retries.") 
+            
+            return (pd.concat(df_list, axis=0, ignore_index= True))
 
     def parseUrl(self, url, batch_size=20, page=1, time=None) -> Dict:
         """

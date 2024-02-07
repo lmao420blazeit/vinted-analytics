@@ -29,6 +29,10 @@ The purpose of this project is to find key insights about data from Vinted which
 - [x] Create a basic data pipeline with prefect and postgres
 - [ ] Create a "Shoe or Clothing" binary label based on sizes
 - [ ] Documentation
+- [ ] Refactor tracking flow to schedule multiple subflows and use persistent results
+- [ ] Cluster assessment of products in dashboard
+- [ ] Use text tokens to predict prices (remove brand names)
+- [ ] Cluster brand names by similarity (yeezy/adidas, nike/jordan, etc)
 
 ### Backlog
 

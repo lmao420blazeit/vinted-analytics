@@ -18,7 +18,7 @@ def load_data_from_postgres(conn) -> pd.DataFrame:
     cursor.execute(query)
     rows = cursor.fetchall()
     return pd.DataFrame(rows, 
-                       columns = ["product_id", "catalog_id", "user_id", "date"])
+                       columns = ["user_id"])
 
 
 @task(name="fetch_sample_data_with_backoff", log_prints= True)
@@ -31,8 +31,7 @@ def fetch_sample_data(data) -> pd.DataFrame:
     _tracking_list = []
     retry = 1 # retry doesnt reset   
     for index, row in data.iterrows():
-        _item = vinted.items.search_item(user_id = row["user_id"], 
-                                        item_id = row["product_id"])
+        _item = vinted.items.search_item(user_id = row["user_id"])
         _tracking_list.append(_item)
         print(_item)
 

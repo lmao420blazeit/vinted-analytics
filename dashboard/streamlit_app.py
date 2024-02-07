@@ -16,6 +16,7 @@ def load_data():
 
 # Main function
 def main():
+    st.cache_data.clear()
     st.set_page_config(layout="wide")
     st.title("Overview")
 

@@ -69,7 +69,9 @@ def add_median_labels(ax, fmt='.2f'):
         ])
 
 
-def plot_cv_scores(scores, figsize=(12, 5), log_to_mlflow=False, 
+def plot_cv_scores(scores, 
+                   figsize=(12, 5), 
+                   log_to_mlflow=False, 
                    title="CV Metrics"):
     """ Function for plotting AUC, Specificity, Recall and Accuracy using boxplots.
     """
@@ -80,7 +82,8 @@ def plot_cv_scores(scores, figsize=(12, 5), log_to_mlflow=False,
     f, axs = plt.subplots(1, 4, figsize=figsize, sharey='row')
     f.suptitle(title, fontsize=16)
 
-    for i, name in enumerate(['AUC', 'Specificity', 'Recall', 'Accuracy']):
+    for i, name in enumerate(['Score', 'Specificity', 'Recall', 'Accuracy']):
+        # score == AUC
         sns.boxplot(data=get_results(scores, name).values, ax=axs[i])
         axs[i].set_title(name, size=18)
         axs[i].set_xticks([0, 1], ['Train', 'Val'], size=12)

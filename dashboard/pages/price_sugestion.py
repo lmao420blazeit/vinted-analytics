@@ -64,14 +64,14 @@ def plotly_wordcloud(text):
 
 def load_labels():
     engine = create_engine('postgresql://user:4202@localhost:5432/vinted-ai')
-    sql_query = f"SELECT DISTINCT catalog_id, brand_title FROM public.products_catalog GROUP BY brand_title, catalog_id HAVING COUNT(product_id) > 100"
+    sql_query = f"SELECT DISTINCT catalog_id, brand_title FROM public.products_catalog GROUP BY brand_title, catalog_id HAVING COUNT(product_id) > 300"
     df = pd.read_sql(sql_query, engine)
     return (df)   
 
 # Load a sample dataset
 def load_data(brand, catalog):
     engine = create_engine('postgresql://user:4202@localhost:5432/vinted-ai')
-    sql_query = f"SELECT * FROM public.products_catalog WHERE brand_title = '{brand}' and catalog_id = '{catalog}' ORDER BY date DESC LIMIT 5000 "
+    sql_query = f"SELECT * FROM public.products_catalog WHERE brand_title = '{brand}' and catalog_id = '{catalog}' ORDER BY date DESC"
     df = pd.read_sql(sql_query, engine)
     return (df)
 
@@ -152,6 +152,32 @@ def main():
         with cols[i]:
             st.write(index, __["price"].count())
             st.table(df_confidence_interval)
+
+    from statsmodels.multivariate.manova import MANOVA
+
+    from statsmodels.stats.multicomp import pairwise_tukeyhsd
+
+    #manova = MANOVA(endog=data[["brand_title", "status", "size_title", "catalog_id"]], 
+    #                exog=data["price"].astype(float))
+    #print(manova.mv_test())
+
+    #topbrands = data['brand_title'].value_counts().nlargest(30)
+    #filter = topbrands.index.tolist() 
+    #data = data[data['brand_title'].isin(filter)]
+
+    tukey_result = pairwise_tukeyhsd(endog=st.session_state.products_catalog['price'], 
+                                     groups=st.session_state.products_catalog['status'], 
+                                     alpha=0.05)
+    for i in ["Satisfatório", "Bom", "Muito bom", "Novo sem etiquetas", "Novo com etiquetas"]:
+        __ = st.session_state.products_catalog[st.session_state.products_catalog["status"] == i]
+        if __["price"].count() < 30:
+            st.write(f"Carefull in status {i}, not enough samples.")
+            
+    summ = tukey_result.summary()
+    df = pd.DataFrame(summ, columns = ["group1", "group2", "mean(g2-g1)", "p-value", "lower", "upper", "reject H0"])
+    df = df.drop(df.index[0], axis = 0)
+    st.subheader("Tukeys HSD")
+    st.table(df)
 
     
 

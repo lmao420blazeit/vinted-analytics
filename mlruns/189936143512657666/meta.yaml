@@ -1,0 +1,6 @@
+artifact_location: file:///C:/Users/Miguel/Desktop/dataengineeringpr/vinted-prefect/mlruns/189936143512657666
+creation_time: 1707254318724
+experiment_id: '189936143512657666'
+last_update_time: 1707254318724
+lifecycle_stage: active
+name: LogisticRegressor-expensiveness-classification

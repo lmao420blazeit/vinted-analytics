@@ -2,9 +2,17 @@ import mlflow
 import pandas as pd
 from sqlalchemy import create_engine
 from sklearn.preprocessing import OrdinalEncoder, OneHotEncoder
-from sklearn.metrics import confusion_matrix, accuracy_score, precision_score, recall_score, f1_score
-from joblib import load
+from sklearn.model_selection import cross_validate
+from sklearn.model_selection import train_test_split, cross_val_predict
+from sklearn.metrics import ConfusionMatrixDisplay, classification_report
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import make_scorer, RocCurveDisplay
 from utils.visualizations import *
+from sklearn.model_selection import train_test_split
+from mlflow.models import infer_signature
+from skopt import BayesSearchCV
+from skopt.space import Real
+from imblearn.metrics import specificity_score
 
 class LogisticRegressor:
     """
@@ -21,7 +29,8 @@ class LogisticRegressor:
         self.load_data()
         self.preprocess_data()
         self.data_transform()
-        self.load_model()
+        self.load_model()      
+        mlflow.sklearn.autolog() 
 
     def load_data(self):
         """
@@ -36,7 +45,9 @@ class LogisticRegressor:
     def preprocess_data(self):
         from sklearn import svm
 
-        clf = svm.OneClassSVM(nu=0.1, kernel="rbf", gamma=0.1)
+        clf = svm.OneClassSVM(nu=0.1, 
+                              kernel="rbf", 
+                              gamma=0.1)
         clf.fit(self.data["price"].values.reshape(-1, 1))
         y_pred_train = clf.predict(self.data["price"].values.reshape(-1, 1))
         self.data["svm"] = y_pred_train
@@ -92,7 +103,54 @@ class LogisticRegressor:
         """
         Train an XGBoost classifier on the preprocessed data.
         """
-        self.model = load('model_development/model_artifacts/logisticregression.pkl') 
+
+        model_params = pd.DataFrame([self.labels.columns, self.cols]).T
+        model_params.columns = ["Labels", "Decoded"]
+        model_params.to_csv("model_development/model_artifacts/params.csv")
+
+        self.X_train, self.X_test, self.y_train, self.y_test = train_test_split(self.labels, self.data["target"], random_state=42)
+
+        # complexity nf(n)**n_features
+        lr = LogisticRegression(max_iter=1000, 
+                                solver = 'saga')
+
+        # parameter space
+        parameters = {'C': Real(1e-3, 1e+2, prior='log-uniform')}
+
+        # Specify scoring metrics
+        # main scoring param has to be defined as "score" since scikit is fetching "mean_test_score"
+        scoring = {
+                "score" : "roc_auc",
+                "specificity": make_scorer(specificity_score, average="weighted"),
+                "recall" : "recall",
+                "accuracy" : "accuracy",
+        }
+
+        # Perform hyperparameter tuning with BayesSearchCV over 10 folds with AUC as refit metric.
+        gs_lr = BayesSearchCV(lr, 
+                              parameters, 
+                              cv=10, 
+                              scoring=scoring, 
+                                refit="score", 
+                                random_state=42, 
+                                n_iter=10, 
+                                return_train_score=True)
+
+        gs_lr.fit(self.X_train, self.y_train)
+
+        # Run nested cross-validation over 10 folds
+        self.lr_scores = cross_validate(gs_lr, 
+                                        self.X_test, 
+                                        self.y_test, 
+                                        cv=10, 
+                                        n_jobs= 1, 
+                                        verbose=1,
+                                        return_train_score=True, 
+                                        scoring=scoring)
+
+        # Make cross-validated predictions 
+        self.lr_preds = cross_val_predict(lr, self.X_test, self.y_test, cv=10, n_jobs=-1)
+        self.model = gs_lr.best_estimator_
 
     def deploy_model(self, run_name="LogisticRegressor"):
         """
@@ -101,27 +159,26 @@ class LogisticRegressor:
         Parameters:
             - run_name (str): The name of the MLflow run.
         """
-        import plotly.express as px
-
-        mlflow.set_experiment(self.experiment_name)
-
         with mlflow.start_run(run_name=run_name):
-            """
-            mlflow.log_metric("accuracy", 
-                              accuracy_score)
-            mlflow.log_metric("precision_score", 
-                              precision_score)
-            mlflow.log_metric("f1_score", 
-                              f1_score)
-            mlflow.log_metric("recall_score", 
-                              recall_score)
-            """
-            #mlflow.log_params({"penalty": "l2", 
-            #                   "solver": "newton-cholesky"})
-            args = dict(model = self.model, testX = self.labels, testY = self.data["target"], name = self.__class__.__name__, log_to_mlflow= True)
+            mlflow.set_experiment = self.experiment_name
+            #mlflow.log_metrics(self.lr_scores)
+            #mlflow.log_params(self.model.coef_)
+            #mlflow.log_dict(self.model.coefficients_df.to_dict("records"), "coefficients.json")
+            print(self.lr_scores)
+            print(self.model.coef_)
+            infer_signature(self.X_test,
+                            self.y_test)
+            args = dict(model = self.model, 
+                        testX = self.X_test, 
+                        testY = self.y_test, 
+                        name = self.__class__.__name__, 
+                        log_to_mlflow= True)
             plot_ROC_AUC_curve(**args)
-            plot_confusion_matrix(**args)
-            plot_cv_scores(**args)
+            plot_confusion_matrix(trueY= self.y_test, 
+                                  predictions = self.lr_preds, 
+                                  log_to_mlflow= True)
+            plot_cv_scores(self.lr_scores, 
+                           log_to_mlflow= True)
     """            
     def get_features(self, num_features = 10):
         status_decoded = self.ordinal_encoder.get_feature_names_out(input_features= ["status"])
@@ -139,6 +196,6 @@ class LogisticRegressor:
 if __name__ == "__main__":
     # example usage
     uri = 'postgresql://user:4202@localhost:5432/vinted-ai'
-    experiment_name = "LogisticRegressor-expensiveness-classfication"
+    experiment_name = "LogisticRegressor-expensiveness-classification"
     mlflow_classifier = LogisticRegressor(uri, experiment_name)
     mlflow_classifier.deploy_model()

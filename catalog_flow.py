@@ -2,15 +2,31 @@ from prefect import flow
 from sqlalchemy import create_engine
 from data_orchestration.prefect_tasks.tasks_vinted_catalog import *
 
-@flow(name= "Fetch from vinted", log_prints= True)
+@flow(name= "Fetch from vinted", 
+      log_prints= True,
+      description= """Main flow: 
+      start node: fetch vinted/items endpoint 
+      -> simple preprocessing 
+      -> dumps into postgres staging table""")
 def fetch_data_from_vinted(sample_frac = 0.01, 
                            item_ids = [221, 1231, 76], 
-                           batch_size = 100, 
-                           nbrRows = 300):
-    
+                           batch_size = 500, 
+                           nbrRows = 500):
+    """
+    Fetches data from the vinted/items endpoint, preprocesses it, and exports it to a PostgreSQL staging table.
+
+    Parameters:
+    - sample_frac (float): Fraction of data to sample.
+    - item_ids (list): List of item IDs to fetch data for.
+    - batch_size (int): Size of each batch to fetch.
+    - nbrRows (int): Number of rows to fetch.
+
+    Returns:
+    None
+    """
     engine = create_engine('postgresql://user:4202@localhost:5432/vinted-ai')
     df_list = []
-    for __item in [221, 1231, 76]:
+    for __item in item_ids:
         df = load_data_from_api(nbrRows = nbrRows,
                         batch_size = batch_size,
                         item = __item)
@@ -35,11 +51,10 @@ if __name__ == "__main__":
     # Run the flow interactively (this would typically be run by the Prefect agent in production)
     fetch_data_from_vinted.serve(name="vinted-v1",
                         tags=["onboarding"],
-                        parameters={"sample_frac": 0.01,
-                                    "item_ids": 200,
-                                    "batch_size": 100,
-                                    "nbrRows": 300,
-                                    "item_ids": [221, 1231, 76]
+                        parameters={"sample_frac": 0.001,
+                                    "batch_size": 500,
+                                    "nbrRows": 500,
+                                    "item_ids": [221, 1231, 76, 2320, 79]
                                     },
                         pause_on_shutdown=False,
                         interval=3600)

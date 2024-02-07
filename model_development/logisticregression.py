@@ -17,7 +17,7 @@ from imblearn.metrics import specificity_score
 uri = 'postgresql://user:4202@localhost:5432/vinted-ai'
 engine = create_engine(uri)
 
-sql_query = "SELECT * FROM public.products_catalog LIMIT 5000"
+sql_query = "SELECT * FROM public.products_catalog LIMIT 3000"
 data = pd.read_sql(sql_query, engine)
 
 from sklearn import svm
@@ -154,14 +154,17 @@ roc = RocCurveDisplay.from_estimator(gs_lr.best_estimator_, X_test, y_test,
                                ax=axs)
 
 """
-"""
+
 import shap
 
-explainer = shap.LinearExplainer(best_lr_model, X_train, model_output='probability')
-shap_values = explainer.shap_values(X_test)
+explainer = shap.Explainer(best_lr_model, 
+                                 X_train, 
+                                 feature_names=cols)
+
+shap_values = explainer(X_test)
 print(shap_values)
 
+shap.plots.beeswarm(shap_values)
 shap.summary_plot(shap_values, 
                   X_test)
 plt.show()
-"""
