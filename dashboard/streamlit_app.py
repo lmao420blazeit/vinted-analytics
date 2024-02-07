@@ -5,7 +5,6 @@ import plotly.express as px
 import seaborn as sns
 import matplotlib.pyplot as plt
 import plotly.graph_objects as go
-import subprocess
 
 # Load a sample dataset
 def load_data():
@@ -29,7 +28,7 @@ def main():
         q_low = st.session_state.products_catalog["price"].quantile(0.05)
         st.session_state.products_catalog = st.session_state.products_catalog[(st.session_state.products_catalog["price"] < q_high) & 
                                                                               (st.session_state.products_catalog["price"] > q_low)]
-        
+
     st.subheader("Brands")
 
     price = st.session_state.products_catalog.groupby(["brand_title"])["price"].sum()

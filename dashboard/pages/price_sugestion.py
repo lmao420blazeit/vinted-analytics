@@ -153,9 +153,8 @@ def main():
             st.write(index, __["price"].count())
             st.table(df_confidence_interval)
 
-    from statsmodels.multivariate.manova import MANOVA
-
     from statsmodels.stats.multicomp import pairwise_tukeyhsd
+    import statsmodels.formula.api as smf
 
     #manova = MANOVA(endog=data[["brand_title", "status", "size_title", "catalog_id"]], 
     #                exog=data["price"].astype(float))
@@ -174,14 +173,19 @@ def main():
             st.write(f"Carefull in status {i}, not enough samples.")
             
     summ = tukey_result.summary()
-    df = pd.DataFrame(summ, columns = ["group1", "group2", "mean(g2-g1)", "p-value", "lower", "upper", "reject H0"])
+    df = pd.DataFrame(summ, 
+                      columns = ["group1", "group2", "mean(g2-g1)", "p-value", "lower", "upper", "reject H0"])
     df = df.drop(df.index[0], axis = 0)
     st.subheader("Tukeys HSD")
     st.table(df)
 
-    
+    res = smf.ols(formula="price ~ C(size_title)", 
+                  data=st.session_state.products_catalog).fit()
+    print(res.params)
 
-
+    res = smf.ols(formula="price ~ C(status)", 
+                  data=st.session_state.products_catalog).fit()
+    print(res.params)
 
 
 main()

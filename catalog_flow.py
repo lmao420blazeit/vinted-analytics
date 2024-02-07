@@ -1,6 +1,7 @@
 from prefect import flow
 from sqlalchemy import create_engine
 from data_orchestration.prefect_tasks.tasks_vinted_catalog import *
+from data_orchestration.tests.catalog_unit_test import test_fetch_data
 
 @flow(name= "Fetch from vinted", 
       log_prints= True,
@@ -9,7 +10,7 @@ from data_orchestration.prefect_tasks.tasks_vinted_catalog import *
       -> simple preprocessing 
       -> dumps into postgres staging table""")
 def fetch_data_from_vinted(sample_frac = 0.01, 
-                           item_ids = [221, 1231, 76], 
+                           item_ids = [], 
                            batch_size = 500, 
                            nbrRows = 500):
     """
@@ -30,6 +31,7 @@ def fetch_data_from_vinted(sample_frac = 0.01,
         df = load_data_from_api(nbrRows = nbrRows,
                         batch_size = batch_size,
                         item = __item)
+        test_fetch_data(df)
         df_list.append(df)
 
     df = pd.concat(df_list, 

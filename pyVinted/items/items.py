@@ -126,38 +126,18 @@ class Items:
 
         raise RuntimeError(f"Failed to make the HTTP request after {max_retries} retries.")
         
-    def search_brands(self, max_retries = 3) -> pd.DataFrame:
-        
+    def search_brands(self, brand_id) -> pd.DataFrame:
         df_list = []
         #params = self.parseUrl(url)
         #url = f"{Urls.VINTED_BASE_URL}/{Urls.VINTED_API_URL}/{Urls.VINTED_PRODUCTS_ENDPOINT}?{urllib.parse.urlencode(params)}"
-        for i in range(1, 50):
-            url = f"https://www.vinted.pt/api/v2/catalog/items?brand_ids[]={str(i)}"
-            response = requester.get(url=url)
-            retries = 1
-            backoff_factor= random.randint(7, 12)
-
-            while retries <= max_retries:
-                sleep(backoff_factor**retries)
-                try:
-                    response.raise_for_status()
-                    items = response.json()
-                    
-                    df = pd.DataFrame(items["dominant_brand"])
-                    df_list.append(df)
-                    print(df)
-
-                except HTTPError as err:
-                    print(err)
-                    raise err
-                
-                except:
-                    return pd.concat(df_list, axis = 0, ignore_index=True)
-                
-            if retries == max_retries:
-                raise RuntimeError(f"Failed to make the HTTP request after {max_retries} retries.") 
-            
-            return (pd.concat(df_list, axis=0, ignore_index= True))
+        url = f"https://www.vinted.pt/api/v2/catalog/items?brand_ids[]={str(brand_id)}"
+        response = requester.get(url=url)
+        response.raise_for_status()
+        items = response.json()
+        if "dominant_brand" not in items:
+            return
+        df = pd.DataFrame([items["dominant_brand"]])
+        return(df)
 
     def parseUrl(self, url, batch_size=20, page=1, time=None) -> Dict:
         """
