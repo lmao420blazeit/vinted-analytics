@@ -12,7 +12,6 @@ from datetime import timedelta, datetime
 def load_data_from_postgres(conn) -> pd.DataFrame:
     """
     """
-
     cursor = conn.cursor()
     query = 'SELECT * FROM samples'  
     cursor.execute(query)

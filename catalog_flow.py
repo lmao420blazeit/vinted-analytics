@@ -56,7 +56,7 @@ if __name__ == "__main__":
                         parameters={"sample_frac": 0.001,
                                     "batch_size": 500,
                                     "nbrRows": 500,
-                                    "item_ids": [221, 1231, 76, 2320, 79]
+                                    "item_ids": [221, 1231, 76, 2320, 79, 2320]
                                     },
                         pause_on_shutdown=False,
                         interval=3600)

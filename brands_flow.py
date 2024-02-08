@@ -4,7 +4,7 @@ from data_orchestration.prefect_tasks.tasks_vinted_brand import *
 @flow(name= "Fetch from vinted", 
       log_prints= True)
 def fetch_brands_from_vinted():
-    brand_ids = 50
+    brand_ids = 100
     chunk_size = 10
     load_brands(brand_ids= brand_ids,
                 chunk_size= chunk_size)
