@@ -164,7 +164,7 @@ joblib.dump(best_lr_model,
             'model_development/model_artifacts/xgboost_regression.pkl')
 
 predictions = best_lr_model.predict(X_test)
-print(pd.concat([pd.Series(predictions), y_test], axis = 1))
+print(pd.concat([pd.Series(predictions), y_test], axis = 1, ignore_index = True))
 """
 f, axs = plt.subplots(1, 1, figsize=(4, 10))
 disp = ConfusionMatrixDisplay.from_predictions(y_test, lr_preds,
