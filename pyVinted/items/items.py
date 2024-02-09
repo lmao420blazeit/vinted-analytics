@@ -5,10 +5,8 @@ from typing import List, Dict
 from pyVinted.settings import Urls
 import pandas as pd
 import urllib
-import numpy as np
 import random
 from time import sleep
-import json
 
 class Items:
 
@@ -79,7 +77,7 @@ class Items:
             
             return (pd.concat(df_list, axis=0, ignore_index= True))
 
-    def search_item(self, user_id, time: int = None, max_retries=3) -> pd.DataFrame:
+    def search_item(self, user_id, time: int = None) -> pd.DataFrame:
         """
         Retrieves items from a given search url on vinted.
 
@@ -95,36 +93,25 @@ class Items:
                                     "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:89.0) Gecko/20100101 Firefox/89.0",
                                     "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"])
         url = f"{Urls.VINTED_BASE_URL}/{Urls.VINTED_API_URL}/users/{user_id}/items"
-        retries = 1
-        backoff_factor= random.randint(7, 11)
 
-        while retries <= max_retries:
-            try:
-                sleep(backoff_factor**retries)
-                # rotating user agents
-                response = requester.get(url=url, 
-                                         headers = {"User-Agent": user_agent})
-                print(response.headers) 
-                if response.status_code == 403:
-                    return
-                response.raise_for_status()
-                items = response.json()
+        # rotating user agents
+        response = requester.get(url=url, 
+                                    headers = {"User-Agent": user_agent})
+        
+        if response.status_code == 403:
+            return
+        
+        response.raise_for_status()
+        items = response.json()
 
-                cols = ["id", "brand", "size", "catalog_id", "color1_id", "favourite_count", 
-                        "view_count", "created_at_ts", "original_price_numeric", "price_numeric"]
-                # add; promoted_until, is_hidden, number of photos, description attributes (material)
-                df = pd.DataFrame(items["items"])#.T
-                
-                print(df[cols])
-                return df[cols]
-                #return pd.DataFrame(columns = cols,
-                #                    data = [[item_id] + [np.NaN for x in range(len(cols)-1)]])
-            
-            except HTTPError as err:
-                print(err)
-                retries += 1
+        cols = ["id", "brand", "size", "catalog_id", "color1_id", "favourite_count", 
+                "view_count", "created_at_ts", "original_price_numeric", "price_numeric"]
+        # add; promoted_until, is_hidden, number of photos, description attributes (material)
+        df = pd.DataFrame(items["items"])#.T
+        
+        print(df[cols])
+        return df[cols]
 
-        raise RuntimeError(f"Failed to make the HTTP request after {max_retries} retries.")
         
     def search_brands(self, brand_id) -> pd.DataFrame:
         df_list = []

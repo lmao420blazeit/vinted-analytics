@@ -3,10 +3,10 @@ import pandas as pd
 from pyVinted.vinted import Vinted
 from sqlalchemy import create_engine
 from ..utils import *
-import requests
 import time
-#from prefect.client.schemas.schedules import IntervalSchedule
-from datetime import timedelta, datetime
+from datetime import datetime
+from prefect.tasks import exponential_backoff
+import json
 
 @task(name="load_data_from_postgres")
 def load_data_from_postgres(conn) -> pd.DataFrame:
@@ -20,7 +20,11 @@ def load_data_from_postgres(conn) -> pd.DataFrame:
                        columns = ["user_id"])
 
 
-@task(name="fetch_sample_data_with_backoff", log_prints= True)
+@task(name="fetch_sample_data_with_backoff",
+      retries=3, 
+      retry_delay_seconds=exponential_backoff(backoff_factor=7),
+      retry_jitter_factor=2,
+      log_prints= True)
 def fetch_sample_data(data) -> pd.DataFrame:
     """
     requests.exceptions.HTTPError 429: https://www.rfc-editor.org/rfc/rfc6585#page-3
@@ -31,8 +35,8 @@ def fetch_sample_data(data) -> pd.DataFrame:
     retry = 1 # retry doesnt reset   
     for index, row in data.iterrows():
         _item = vinted.items.search_item(user_id = row["user_id"])
+        #_item = json.dumps(_item, ensure_ascii=False).encode('utf-8')
         _tracking_list.append(_item)
-        print(_item)
 
     df = pd.concat(_tracking_list, 
                    axis=0, 
@@ -87,20 +91,16 @@ def remove_sold_from_sample(df: pd.DataFrame, **kwargs) -> None:
     engine.execute(query)
     return
 
-def load_balancer(df: pd.DataFrame, chunk_size = 50, interval = 600) -> None:
+def load_balancer(df: pd.DataFrame, chunk_size = 10, interval = 600) -> None:
     # total bandwidth = 50*1*24 = 1200
     for start in range(0, df.shape[0], chunk_size):
-        #start_time = datetime.utcnow() + timedelta(seconds=interval*i)
-        #child_flow = tracking_subflow(df.iloc[start:start + chunk_size])
-        df = fetch_sample_data(df.iloc[start:start + chunk_size])
-        df = transform_data(df)
-        export_data_to_postgres(df)
+        tracking_subflow(df.iloc[start:start + chunk_size])
         time.sleep(interval)
 
-@flow(name = "Tracking load balancer subflows.")
+@flow(name = "Tracking load balancer subflows.", log_prints= True)
 def tracking_subflow(df):
     df = fetch_sample_data(df)
     df = transform_data(df)
     export_data_to_postgres(df)
-    mvalues = get_missing_values(df)
-    remove_sold_from_sample(mvalues)
+    #mvalues = get_missing_values(df)
+    #remove_sold_from_sample(mvalues)

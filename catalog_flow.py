@@ -52,7 +52,7 @@ if __name__ == "__main__":
     # update brands https://www.vinted.pt/api/v2/brands
     # Run the flow interactively (this would typically be run by the Prefect agent in production)
     fetch_data_from_vinted.serve(name="vinted-v1",
-                        tags=["onboarding"],
+                        tags=["staging"],
                         parameters={"sample_frac": 0.001,
                                     "batch_size": 500,
                                     "nbrRows": 500,

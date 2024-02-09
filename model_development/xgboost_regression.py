@@ -1,23 +1,18 @@
 import pandas as pd
 from sqlalchemy import create_engine
 from sklearn.preprocessing import OrdinalEncoder, OneHotEncoder
-from sklearn.linear_model import LogisticRegression
 import joblib
 
 from sklearn.model_selection import cross_validate
 from sklearn.model_selection import train_test_split, cross_val_predict
-from sklearn.metrics import ConfusionMatrixDisplay, classification_report
-from sklearn.metrics import make_scorer, RocCurveDisplay
 
 from skopt import BayesSearchCV
 from skopt.space import Real
 
-from imblearn.metrics import specificity_score
-
 uri = 'postgresql://user:4202@localhost:5432/vinted-ai'
 engine = create_engine(uri)
 
-sql_query = "SELECT * FROM public.products_catalog LIMIT 3000"
+sql_query = "SELECT * FROM public.products_catalog LIMIT 5000"
 data = pd.read_sql(sql_query, engine)
 
 from sklearn import svm
@@ -70,15 +65,17 @@ brand_decoded = brand_onehot_encoder.get_feature_names_out(input_features= ["bra
 
 #print(pd.DataFrame(brand_onehot_encoder.inverse_transform(brand_title), columns=['Category']))
 
-labels = pd.concat([size_title, status, brand_title, catalog_id], axis=1, ignore_index=False) #.fillna(0)
-cols = size_decoded.tolist() + status_decoded.tolist() + brand_decoded.tolist()
+labels = pd.concat([size_title, status, brand_title, catalog_id], 
+                   axis=1, 
+                   ignore_index=True) #.fillna(0)
 
+cols = size_decoded.tolist() + status_decoded.tolist() + brand_decoded.tolist() + catalog_id_decoded.tolist()
 model_params = pd.DataFrame([labels.columns, cols]).T
 model_params.columns = ["Labels", "Decoded"]
 model_params.to_csv("model_development/model_artifacts/params_xgboost.csv")
 
-
 X_train, X_test, y_train, y_test = train_test_split(labels, data["price"], random_state=42)
+
 """
 import pickle
 
