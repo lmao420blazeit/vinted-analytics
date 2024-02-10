@@ -1,8 +1,7 @@
 from prefect import task
 import pandas as pd
 from sqlalchemy import create_engine
-#from ..utils import insert_on_conflict_nothing_brands
-
+from ..utils import upsert_brands_dim
 
 @task(name="Load data for backfilling")
 def load_from_brands_interest(engine):
@@ -43,8 +42,9 @@ def brands_interest_to_dim(data: pd.DataFrame, engine) -> None:
     table_name = 'brands_dim'  # Specify the name of the table to export data to
     data.to_sql(table_name, 
                 engine, 
-                if_exists = "replace", 
-                index = False
+                if_exists = "append", 
+                index = False,
+                method=upsert_brands_dim
                 )
     
     return

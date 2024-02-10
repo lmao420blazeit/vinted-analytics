@@ -14,4 +14,4 @@ if __name__ == "__main__":
     ingest_brands.serve(name="brands-ingestion-pg",
             tags=["ingestion", "postgresql"],
             pause_on_shutdown=False,
-            interval=60*60)
+            interval=60*60*6)

@@ -28,6 +28,13 @@ def insert_on_conflict_nothing_brands(table, conn, keys, data_iter):
      result = conn.execute(stmt)
      return result.rowcount
 
+def upsert_brands_dim(table, conn, keys, data_iter):
+     # "a" is the primary key in "conflict_table"
+     data = [dict(zip(keys, row)) for row in data_iter]
+     stmt = insert(table.table).values(data).on_conflict_do_nothing(index_elements=["brand_id"])
+     result = conn.execute(stmt)
+     return result.rowcount
+
 
 
 

@@ -13,7 +13,7 @@ from data_orchestration.tests.catalog_unit_test import test_fetch_data
 def fetch_data_from_vinted(sample_frac = 0.01, 
                            item_ids = [], 
                            batch_size = 500, 
-                           nbrRows = 500):
+                           nbrRows = 1000):
     """
     Fetches data from the vinted/items endpoint, preprocesses it, and exports it to a PostgreSQL staging table.
 
@@ -57,7 +57,7 @@ if __name__ == "__main__":
                         parameters={"sample_frac": 0.001,
                                     "batch_size": 500,
                                     "nbrRows": 500,
-                                    "item_ids": [221, 1231, 76, 2320, 79, 2320]
+                                    "item_ids": [221, 1242, 2320, 1811, 267, 1812] # [t shirts, trainers, sweaters, books, hoodies and sweaters, zip hoodies]
                                     },
                         pause_on_shutdown=False,
                         interval=3600)
