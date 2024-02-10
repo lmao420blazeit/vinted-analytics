@@ -5,7 +5,8 @@ from data_orchestration.tests.catalog_unit_test import test_fetch_data
 
 @flow(name= "Fetch from vinted", 
       log_prints= True,
-      description= """Main flow: 
+      description= """
+      Main flow: 
       start node: fetch vinted/items endpoint 
       -> simple preprocessing 
       -> dumps into postgres staging table""")
@@ -52,7 +53,7 @@ if __name__ == "__main__":
     # update brands https://www.vinted.pt/api/v2/brands
     # Run the flow interactively (this would typically be run by the Prefect agent in production)
     fetch_data_from_vinted.serve(name="vinted-v1",
-                        tags=["staging"],
+                        tags=["staging", "extraction", "api"],
                         parameters={"sample_frac": 0.001,
                                     "batch_size": 500,
                                     "nbrRows": 500,
