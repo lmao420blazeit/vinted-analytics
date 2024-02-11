@@ -57,7 +57,7 @@ def transform(data: pd.DataFrame) -> pd.DataFrame:
 
     data = data.drop(["is_for_swap", "user", "photo", "is_favourite", "discount", "badge", "conversion", "service_fee", 
             "total_item_price_rounded", "icon_badges", "is_visible", "search_tracking_params", "favourite_count",
-            "total_item_price", "view_count", "content_source"],
+            "total_item_price", "content_source"],
             axis = 1)
     
     data = data.rename(columns={'id': 'product_id'})

@@ -7,8 +7,9 @@ import time
 from datetime import datetime
 from prefect.tasks import exponential_backoff
 import json
+from prefect.states import Completed, Failed
 
-@task(name="load_data_from_postgres")
+@task(name="Polling 'user_ids' from samples table.")
 def load_data_from_postgres(conn) -> pd.DataFrame:
     """
     """
@@ -20,7 +21,7 @@ def load_data_from_postgres(conn) -> pd.DataFrame:
                        columns = ["user_id"])
 
 
-@task(name="fetch_sample_data_with_backoff",
+@task(name="Individual API call for each 'user_id'. Returns a dataframe of several products or None, case user doesn't have products.",
       retries=3, 
       retry_delay_seconds=exponential_backoff(backoff_factor=7),
       retry_jitter_factor=2,
@@ -32,11 +33,17 @@ def fetch_sample_data(data) -> pd.DataFrame:
     # Specify your transformation logic here
     vinted = Vinted()
     _tracking_list = []
-    retry = 1 # retry doesnt reset   
     for index, row in data.iterrows():
-        _item = vinted.items.search_item(user_id = row["user_id"])
+        try:
+            _item = vinted.items.search_item(user_id = row["user_id"])
+            _tracking_list.append(_item)
+        except:
+            pass
         #_item = json.dumps(_item, ensure_ascii=False).encode('utf-8')
-        _tracking_list.append(_item)
+        
+    if _tracking_list == []:
+        #prefect.engine.signals.SKIP()
+        return Failed(message="Dataframe is empty.")
 
     df = pd.concat(_tracking_list, 
                    axis=0, 
@@ -44,7 +51,7 @@ def fetch_sample_data(data) -> pd.DataFrame:
 
     return df
 
-@task(name="transform_data")
+@task(name="Drops and type asserts the columns fetched.")
 def transform_data(df: pd.DataFrame, **kwargs) -> None:
     """
     """
@@ -58,7 +65,7 @@ def transform_data(df: pd.DataFrame, **kwargs) -> None:
     df["date"] = datetime.now().strftime("%Y-%m-%d")
     return df
 
-@task(name= "export_data_to_postgres")
+@task(name= "Export data to tracking staging table using method: append")
 def export_data_to_postgres(df: pd.DataFrame, **kwargs) -> None:
     """
     """
@@ -68,39 +75,16 @@ def export_data_to_postgres(df: pd.DataFrame, **kwargs) -> None:
     df.to_sql(table_name, engine, if_exists = "append", index = False, method= insert_on_conflict_nothing_tracking)
 
 
-@task(name= "get_missing_values")
-def get_missing_values(df: pd.DataFrame) -> pd.DataFrame:
-    """
-    """
-    df = df[df.isna().any(axis=1)]
-
-    return (df)
-
-
-@task(name= "remove_sold_from_sample")
-def remove_sold_from_sample(df: pd.DataFrame, **kwargs) -> None:
-    """
-    """
-    engine = create_engine('postgresql://user:4202@localhost:5432/vinted-ai')
-    if df.empty:
-        return
-    
-    ids = tuple(df["product_id"])
-    print(ids)
-    query = f"DELETE FROM samples WHERE product_id IN {ids}"
-    engine.execute(query)
-    return
-
-def load_balancer(df: pd.DataFrame, chunk_size = 10, interval = 600) -> None:
+def load_balancer(df: pd.DataFrame, chunk_size = 25, interval = 600) -> None:
     # total bandwidth = 50*1*24 = 1200
     for start in range(0, df.shape[0], chunk_size):
-        tracking_subflow(df.iloc[start:start + chunk_size])
+        tracking_subflow(df = df.iloc[start:start + chunk_size], 
+                         name = f"Tracking subflow for: {str(start-chunk_size)}-{str(start)}")
         time.sleep(interval)
 
-@flow(name = "Tracking load balancer subflows.", log_prints= True)
-def tracking_subflow(df):
+@flow(name = "{name}", 
+      log_prints= True)
+def tracking_subflow(df, name):
     df = fetch_sample_data(df)
     df = transform_data(df)
     export_data_to_postgres(df)
-    #mvalues = get_missing_values(df)
-    #remove_sold_from_sample(mvalues)
