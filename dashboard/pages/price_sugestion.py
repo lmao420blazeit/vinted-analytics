@@ -135,7 +135,7 @@ def main():
     from scipy.stats import bootstrap
 
     def calculate_quantiles(data):
-        return np.percentile(data, [5, 50, 95])
+        return np.percentile(data, [25, 50, 95])
     
     cols = st.columns(5)
     for i, index in enumerate(["Satisfatório", "Bom", "Muito bom", "Novo sem etiquetas", "Novo com etiquetas"]):
@@ -148,7 +148,7 @@ def main():
             'low': bootstrap_results.confidence_interval.low,
             'high': bootstrap_results.confidence_interval.high
         },
-        index =  ["Q5%", "Q50%", "Q95%"])
+        index =  ["Q25%", "Q50%", "Q95%"])
         with cols[i]:
             st.write(index, __["price"].count())
             st.table(df_confidence_interval)
