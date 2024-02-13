@@ -71,19 +71,19 @@ class Requester:
 
     #     # client.headers["X-Csrf-Token"] = csrf_token
     #     # client.headers["Content-Type"] = "*/*"
-    #     # client.headers["Host"] = "www.vinted.fr"
+    #     # client.headers["Host"] = "www.vinted.pt"
     #     print(self.session.headers)
-    #     urlCaptcha = "https://www.vinted.fr/api/v2/captchas"
+    #     urlCaptcha = "https://www.vinted.pt/api/v2/captchas"
     #     dataCaptcha = {"entity_type":"login", "payload":{"username": username }}
 
-    #     token_endpoint  = "https://www.vinted.fr/oauth/token"
+    #     token_endpoint  = "https://www.vinted.pt/oauth/token"
     #     uuid = self.session.post(urlCaptcha, data=json.dumps(dataCaptcha)).json()["uuid"]
     #     log = {"client_id":"web","scope":"user","username":username,"password":password,"uuid":uuid,"grant_type":"password"}
     #     b = self.session.post(token_endpoint, data=json.dumps(log) )
     #     print(b.text)
 
     # def message(self):
-    #     response = self.session.get("https://www.vinted.fr/api/v2/users/33003526/msg_threads?page=1&per_page=20")
+    #     response = self.session.get("https://www.vinted.pt/api/v2/users/33003526/msg_threads?page=1&per_page=20")
     #     print(response.text)
 
 

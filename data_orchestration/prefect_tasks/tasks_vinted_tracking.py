@@ -6,8 +6,7 @@ from ..utils import *
 import time
 from datetime import datetime
 from prefect.tasks import exponential_backoff
-import json
-from prefect.states import Completed, Failed
+from prefect.states import Failed
 
 @task(name="Polling 'user_ids' from samples table.")
 def load_data_from_postgres(conn) -> pd.DataFrame:
@@ -21,7 +20,8 @@ def load_data_from_postgres(conn) -> pd.DataFrame:
                        columns = ["user_id"])
 
 
-@task(name="Individual API call for each 'user_id'. Returns a dataframe of several products or None, case user doesn't have products.",
+@task(name="Batch API calls.",
+      description= "Executes API calls in batches. Fails if dataframe is empty (all calls return None).",
       retries=3, 
       retry_delay_seconds=exponential_backoff(backoff_factor=7),
       retry_jitter_factor=2,
@@ -39,7 +39,6 @@ def fetch_sample_data(data) -> pd.DataFrame:
             _tracking_list.append(_item)
         except:
             pass
-        #_item = json.dumps(_item, ensure_ascii=False).encode('utf-8')
         
     if _tracking_list == []:
         #prefect.engine.signals.SKIP()
@@ -55,6 +54,10 @@ def fetch_sample_data(data) -> pd.DataFrame:
 def transform_data(df: pd.DataFrame, **kwargs) -> None:
     """
     """
+    cols = ["id", "brand", "size", "catalog_id", "color1_id", "favourite_count", 
+            "view_count", "created_at_ts", "original_price_numeric", "price_numeric", "description", "package_size_id", "service_fee", "city", "country", "color1", "status"]
+    df = df[cols]
+
     df = df.rename(columns={'id': 'product_id', 
                             "brand": "brand_title", 
                             "size": "size_title", 
@@ -65,14 +68,22 @@ def transform_data(df: pd.DataFrame, **kwargs) -> None:
     df["date"] = datetime.now().strftime("%Y-%m-%d")
     return df
 
-@task(name= "Export data to tracking staging table using method: append")
+@task(name= "Export data to 'tracking'.",
+      description= "Export tracking data to staging table: 'tracking'",
+      timeout_seconds = 360,
+      retries= 2)
 def export_data_to_postgres(df: pd.DataFrame, **kwargs) -> None:
     """
     """
 
     table_name = 'tracking'  # Specify the name of the table to export data to
     engine = create_engine('postgresql://user:4202@localhost:5432/vinted-ai')
-    df.to_sql(table_name, engine, if_exists = "append", index = False, method= insert_on_conflict_nothing_tracking)
+    df.to_sql(table_name, 
+              engine, 
+              if_exists = "append", 
+              index = False, 
+              method= insert_on_conflict_nothing_tracking,
+              schema= "public")
 
 
 def load_balancer(df: pd.DataFrame, chunk_size = 25, interval = 600) -> None:
@@ -82,7 +93,7 @@ def load_balancer(df: pd.DataFrame, chunk_size = 25, interval = 600) -> None:
                          name = f"Tracking subflow for: {str(start-chunk_size)}-{str(start)}")
         time.sleep(interval)
 
-@flow(name = "{name}", 
+@flow(flow_run_name= "{name}", 
       log_prints= True)
 def tracking_subflow(df, name):
     df = fetch_sample_data(df)

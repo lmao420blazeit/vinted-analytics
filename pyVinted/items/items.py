@@ -7,8 +7,50 @@ import pandas as pd
 import urllib
 import random
 from time import sleep
+from lxml import html
+import json
 
 class Items:
+
+    def get_catalog_ids(self):
+        # using HTML parser
+        res = requester.get("https://www.vinted.pt/catalog?search_text=", 
+                    headers ={"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.0.0 Safari/537.36",
+                                'referer':'https://www.google.com/'})
+        tree = html.fromstring(res.content)
+
+        # Extract the content using the XPath selector
+        next_data_content = tree.xpath('//*[@id="__NEXT_DATA__"]/text()')
+
+        
+
+        data = json.loads(next_data_content[0])["props"]["pageProps"]["_layout"]["catalogTree"]
+        df_list = []
+        for catalog in data:
+            for i in range(len(data)):
+                for f in range(len(data[i]["catalogs"])):
+                    df_list.append(pd.DataFrame({"catalog_id": [data[i]["catalogs"][f]["id"]], 
+                                                "code": [data[i]["catalogs"][f]["code"]],
+                                                "title": [data[i]["catalogs"][f]["title"]],
+                                                "item_count": [data[i]["catalogs"][f]["item_count"]],
+                                                "unisex_catalog_id": [data[i]["catalogs"][f]["unisex_catalog_id"]],
+                                                "parent_id": [data[i]["id"]],
+                                                "parent_title": [data[i]["title"]]
+                                                })
+                                                )
+                    for l in range(len(data[i]["catalogs"][f]["catalogs"])):
+                        df_list.append(pd.DataFrame({"catalog_id": [data[i]["catalogs"][f]["catalogs"][l]["id"]], 
+                                                    "code": [data[i]["catalogs"][f]["catalogs"][l]["code"]],
+                                                    "title": [data[i]["catalogs"][f]["catalogs"][l]["title"]],
+                                                    "item_count": [data[i]["catalogs"][f]["catalogs"][l]["item_count"]],
+                                                    "unisex_catalog_id": [data[i]["catalogs"][f]["catalogs"][l]["unisex_catalog_id"]],
+                                                    "parent_id": [data[i]["catalogs"][f]["id"]],
+                                                    "parent_title": [data[i]["catalogs"][f]["code"]]
+                                                    })
+                                                    )
+                
+
+        return(pd.concat(df_list, ignore_index= True))
 
     def search_all(self, nbrRows, *args, **kwargs):
         nbrpages = round(nbrRows/kwargs["batch_size"])
@@ -104,13 +146,10 @@ class Items:
         response.raise_for_status()
         items = response.json()
 
-        cols = ["id", "brand", "size", "catalog_id", "color1_id", "favourite_count", 
-                "view_count", "created_at_ts", "original_price_numeric", "price_numeric"]
         # add; promoted_until, is_hidden, number of photos, description attributes (material)
         df = pd.DataFrame(items["items"])#.T
         
-        print(df[cols])
-        return df[cols]
+        return df
 
         
     def search_brands(self, brand_id) -> pd.DataFrame:

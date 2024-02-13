@@ -12,7 +12,7 @@ from skopt.space import Real
 uri = 'postgresql://user:4202@localhost:5432/vinted-ai'
 engine = create_engine(uri)
 
-sql_query = "SELECT * FROM public.products_catalog LIMIT 5000"
+sql_query = "SELECT * FROM public.products_catalog WHERE date BETWEEN '2024-02-03' AND '2024-02-09' ORDER BY date DESC LIMIT 3000"
 data = pd.read_sql(sql_query, engine)
 
 from sklearn import svm
@@ -96,7 +96,7 @@ import xgboost as xgb
 
 regressor=xgb.XGBRegressor()
 
-from skopt.space import Real, Categorical, Integer
+from skopt.space import Real, Integer
 
 params={'min_child_weight': Integer(0, 50, "uniform"),
         'max_depth': Integer(1, 10, 'uniform'),
@@ -142,8 +142,7 @@ for score in lr_scores:
         print(f"{score:<17}: {np.mean(lr_scores[score]):.2f}")
 
 best_lr_model = gs_lr.best_estimator_
-print(best_lr_model)
-
+"""
 from xgboost import plot_importance
 import matplotlib.pyplot as plt
 plt.style.use('fivethirtyeight')
@@ -152,7 +151,7 @@ plt.rcParams.update({'font.size': 16})
 fig, ax = plt.subplots(figsize=(12,6))
 plot_importance(best_lr_model, max_num_features=8, ax=ax)
 plt.show()
-
+"""
 #coefficients_df = pd.DataFrame({'Feature': cols, 'Coefficient': best_lr_model.coef_[0]})
 #coefficients_df = coefficients_df.sort_values(by='Coefficient', ascending=False).head(10)
 #print(coefficients_df)
@@ -161,7 +160,33 @@ joblib.dump(best_lr_model,
             'model_development/model_artifacts/xgboost_regression.pkl')
 
 predictions = best_lr_model.predict(X_test)
-print(pd.concat([pd.Series(predictions), y_test], axis = 1, ignore_index = True))
+X_test.columns = cols
+X_test = X_test.reset_index(drop = True)
+X_test["target"] = pd.Series(y_test)
+X_test["prediction"] = pd.Series(predictions)
+
+
+predictions = best_lr_model.predict(X_train)
+X_train.columns = cols
+X_train = X_train.reset_index(drop = True)
+X_train["target"] = pd.Series(y_train)
+X_train["prediction"] = pd.Series(predictions)
+
+
+from evidently.report import Report
+from evidently.metric_preset import RegressionPreset
+
+regression_report = Report(
+        metrics=[
+                RegressionPreset(),
+                ],
+        options={"render": {"raw_data": True}}
+                 )
+
+regression_report.run(reference_data=X_train, 
+                      current_data=X_test)
+regression_report.save_html("evidently_reports/xgboost_regression_report.html")
+
 """
 f, axs = plt.subplots(1, 1, figsize=(4, 10))
 disp = ConfusionMatrixDisplay.from_predictions(y_test, lr_preds,
