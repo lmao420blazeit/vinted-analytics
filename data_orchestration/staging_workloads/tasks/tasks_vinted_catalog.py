@@ -3,7 +3,7 @@ import pandas as pd
 from typing import List
 import datetime
 from os import path
-from prefect import task
+from prefect import task, flow
 from prefect.context import FlowRunContext
 from .utils import insert_on_conflict_nothing_user, insert_on_conflict_nothing
 from operator import itemgetter
@@ -16,7 +16,7 @@ from prefect.tasks import exponential_backoff
       retries=3, 
       retry_delay_seconds=exponential_backoff(backoff_factor=6),
       retry_jitter_factor=2)
-def load_data_from_api(nbrRows: int, batch_size: int, item: List) -> pd.DataFrame:
+def load_data_from_api(vinted, nbrRows: int, batch_size: int, item: str) -> pd.DataFrame:
     """
     Loads data from the Vinted API based on specified parameters.
 
@@ -28,18 +28,29 @@ def load_data_from_api(nbrRows: int, batch_size: int, item: List) -> pd.DataFram
     Returns:
         pd.DataFrame: DataFrame containing data fetched from the Vinted API.
     """
-    vinted = Vinted()
-    date = datetime.datetime.now()
-    items = vinted.items.search_all(nbrRows = nbrRows, 
-                                batch_size = batch_size, 
-                                url = f"https://www.vinted.pt/catalog/items?catalog_ids[]={item}&order=newest_first")
+    df = vinted.items.search_catalog(url = f"https://www.vinted.pt/catalog/items?catalog_ids[]={item}&order=newest_first")
     # cant process latin characters
-    items["user_id"] = items.user.apply(pd.Series)["id"]
-    items["color"] = items.photo.apply(pd.Series)["dominant_color"]
-    items["catalog_id"] = item
-    items["date"] = date
+    df["catalog_id"] = item
     
-    return (items)
+    return (df)
+
+@flow(name="Subflow for catalog.", 
+      flow_run_name= "Subflow for catalog {item}",
+      log_prints= True)
+def catalog_subflow(item, nbrRows, batch_size, vinted, engine, sample_frac):
+    df = load_data_from_api(vinted = vinted,
+                            nbrRows = nbrRows,
+                            batch_size = batch_size,
+                            item = item)
+    df = transform(data = df)
+    df = parse_size_title(data = df)
+    #create_artifacts(data = df)
+    export_data_to_postgres(data = df, 
+                            engine = engine)     # upload first to products due to FK referencing
+    export_sample_to_postgres(df, 
+                              sample_frac= sample_frac,
+                              engine = engine)
+    return
 
 @task(name="Drop columns and rename.")
 def transform(data: pd.DataFrame) -> pd.DataFrame:
@@ -52,15 +63,20 @@ def transform(data: pd.DataFrame) -> pd.DataFrame:
     Returns:
         pd.DataFrame: Transformed DataFrame.
     """
+    date = datetime.datetime.now()
+    data["user_id"] = data.user.apply(pd.Series)["id"]
+    data["color"] = data.photo.apply(pd.Series)["dominant_color"]
+    data["date"] = date
     # Specify your transformation logic here
     data["price"] = data["price"].astype(float)
 
     data = data.drop(["is_for_swap", "user", "photo", "is_favourite", "discount", "badge", "conversion", "service_fee", 
             "total_item_price_rounded", "icon_badges", "is_visible", "search_tracking_params", "favourite_count",
-            "total_item_price", "content_source"],
+            "total_item_price", "content_source", "service_fee"],
             axis = 1)
     
     data = data.rename(columns={'id': 'product_id'})
+    data["flow_name"] = FlowRunContext.get().flow_run.dict().get('name')
     data['date'] = pd.to_datetime(data['date']).dt.strftime('%Y-%m-%d %H:%M')
     return (data)
 
@@ -189,7 +205,6 @@ def export_data_to_postgres(data: pd.DataFrame, engine) -> None:
     #schema_name = 'public'  # Specify the name of the schema to export data to
     table_name = 'products_catalog'  # Specify the name of the table to export data to
     #engine = create_engine('postgresql://user:4202@localhost:5432/vinted-ai')
-    data["flow_name"] = FlowRunContext.get().flow_run.dict().get('name')
     data.to_sql(table_name, 
                 engine, 
                 if_exists = "append", 

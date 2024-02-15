@@ -9,6 +9,8 @@ import random
 from time import sleep
 from lxml import html
 import json
+from PIL import Image
+import io
 
 class Items:
 
@@ -56,14 +58,14 @@ class Items:
         nbrpages = round(nbrRows/kwargs["batch_size"])
         df_list = []
         for _page in range(1, nbrpages + 1):
-            d = self._search(*args, **kwargs, page = _page)
+            d = self.search_catalog(*args, **kwargs, page = _page)
             if d.empty:
                 return
             df_list.append(d)
 
         return(pd.concat(df_list, axis = 0, ignore_index=True))
 
-    def _search(self, url, batch_size: int = 10, page: int =1, time: int = None) -> pd.DataFrame:
+    def search_catalog(self, url, batch_size: int = 10, page: int =1) -> pd.DataFrame:
         """
         Retrieves items from a given search url on vinted.
 
@@ -74,7 +76,7 @@ class Items:
 
         """
 
-        params = self.parseUrl(url, batch_size, page, time)
+        params = self.parseUrl(url, batch_size, page)
         url = f"{Urls.VINTED_BASE_URL}/{Urls.VINTED_API_URL}/{Urls.VINTED_PRODUCTS_ENDPOINT}?{urllib.parse.urlencode(params)}"
         response = requester.get(url=url)
 
@@ -84,6 +86,11 @@ class Items:
             
             df = pd.DataFrame(items["items"])
             df["catalog_total_items"] = items["pagination"]["total_entries"]
+            #print(items["items"][0]["photo"]["thumbnails"][0]["url"])
+            #print(requester.get(items["items"][0]["photo"]["thumbnails"][0]["url"], stream = True).raw.data)
+            #images = [Image.open(io.BytesIO(requester.get(items["items"][i]["photo"]["thumbnails"][0]["url"]), stream = True).raw.data).convert("L") for i in range(len(items["items"]))]
+            #print(images)
+
             return (df)
 
         except HTTPError as err:

@@ -55,7 +55,7 @@ def transform_data(df: pd.DataFrame, **kwargs) -> None:
     """
     """
     cols = ["id", "brand", "size", "catalog_id", "color1_id", "favourite_count", 
-            "view_count", "created_at_ts", "original_price_numeric", "price_numeric", "description", "package_size_id", "service_fee", "city", "country", "color1", "status"]
+            "view_count", "created_at_ts", "original_price_numeric", "price_numeric", "description", "package_size_id", "service_fee", "city", "country", "color1", "status", "item_closing_action"]
     df = df[cols]
 
     df = df.rename(columns={'id': 'product_id', 
@@ -86,7 +86,7 @@ def export_data_to_postgres(df: pd.DataFrame, **kwargs) -> None:
               schema= "public")
 
 
-def load_balancer(df: pd.DataFrame, chunk_size = 25, interval = 600) -> None:
+def load_balancer(df: pd.DataFrame, chunk_size = 10, interval = 600) -> None:
     # total bandwidth = 50*1*24 = 1200
     for start in range(0, df.shape[0], chunk_size):
         tracking_subflow(df = df.iloc[start:start + chunk_size], 
@@ -98,4 +98,5 @@ def load_balancer(df: pd.DataFrame, chunk_size = 25, interval = 600) -> None:
 def tracking_subflow(df, name):
     df = fetch_sample_data(df)
     df = transform_data(df)
+    print(df)
     export_data_to_postgres(df)
