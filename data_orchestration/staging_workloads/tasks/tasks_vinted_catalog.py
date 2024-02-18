@@ -36,7 +36,8 @@ def load_data_from_api(vinted, nbrRows: int, batch_size: int, item: str) -> pd.D
 
 @flow(name="Subflow for catalog.", 
       flow_run_name= "Subflow for catalog {item}",
-      log_prints= True)
+      log_prints= True,
+      timeout = 600)
 def catalog_subflow(item, nbrRows, batch_size, vinted, engine, sample_frac):
     df = load_data_from_api(vinted = vinted,
                             nbrRows = nbrRows,
@@ -72,7 +73,7 @@ def transform(data: pd.DataFrame) -> pd.DataFrame:
 
     data = data.drop(["is_for_swap", "user", "photo", "is_favourite", "discount", "badge", "conversion", "service_fee", 
             "total_item_price_rounded", "icon_badges", "is_visible", "search_tracking_params", "favourite_count",
-            "total_item_price", "content_source", "service_fee"],
+            "total_item_price", "content_source"],
             axis = 1)
     
     data = data.rename(columns={'id': 'product_id'})

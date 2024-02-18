@@ -2,7 +2,7 @@ from prefect import task, flow
 import pandas as pd
 from tasks.pyVinted.vinted import Vinted
 from sqlalchemy import create_engine
-from .utils import *
+from .utils import insert_on_conflict_nothing_tracking, insert_on_conflict_nothing_users_staging
 import time
 from datetime import datetime
 from prefect.tasks import exponential_backoff
@@ -36,10 +36,9 @@ def fetch_sample_data(data) -> pd.DataFrame:
     _tracking_list = []
     _user_list = []
     for index, row in data.iterrows():
-        _item = vinted.items.search_item(user_id = row["user_id"])
+        _item, _user = vinted.items.search_item(user_id = row["user_id"])
         _tracking_list.append(_item)
-        #_user = pd.read_json(_item["user"], orient='split') # error here
-        #_user_list.append(_user)
+        _user_list.append(_user)
         
         
     if _tracking_list == []:
@@ -50,11 +49,11 @@ def fetch_sample_data(data) -> pd.DataFrame:
                    axis=0, 
                    ignore_index=True)
     
-    #users = pd.concat(_user_list,
-    #                axis = 0, 
-    #                ignore_index= True)
+    users = pd.concat(_user_list,
+                    axis = 0, 
+                    ignore_index= True)
     
-    return items
+    return [items, users]
 
 @task(name="Drops and type asserts the columns fetched.")
 def transform_items(df: pd.DataFrame, **kwargs) -> None:
@@ -106,20 +105,38 @@ def export_items_to_postgres(df: pd.DataFrame, **kwargs) -> None:
               index = False, 
               method= insert_on_conflict_nothing_tracking,
               schema= "public")
+    
+@task(name= "Export data to 'users_staging'.",
+      description= "Export tracking data to staging table: 'users_staging'",
+      timeout_seconds = 360,
+      retries= 2)
+def export_users_to_postgres(df: pd.DataFrame, **kwargs) -> None:
+    """
+    """
+
+    table_name = 'users_staging'  # Specify the name of the table to export data to
+    engine = create_engine('postgresql://user:4202@localhost:5432/vinted-ai')
+    df.to_sql(table_name, 
+              engine, 
+              if_exists = "append", 
+              index = False, 
+              method= insert_on_conflict_nothing_users_staging,
+              schema= "public")
+
 
 
 def load_balancer(df: pd.DataFrame, chunk_size = 10, interval = 360) -> None:
     # total bandwidth = 50*1*24 = 1200
     for start in range(0, df.shape[0], chunk_size):
         tracking_subflow(df = df.iloc[start:start + chunk_size], 
-                         name = f"Tracking subflow for: {str(start-chunk_size)}-{str(start)}")
+                         name = f"Tracking subflow for: {str(start)}-{str(start + chunk_size)} of {str(df.shape[0])}")
         time.sleep(interval)
 
 @flow(flow_run_name= "Chunk: {name}", 
       log_prints= True)
 def tracking_subflow(df, name):
-    items = fetch_sample_data(df)    
-    #items, users = res
+    items, users = fetch_sample_data(df)    
     items = transform_items(items)
-    #users = transform_users(users)
+    users = transform_users(users)
     export_items_to_postgres(items)
+    export_users_to_postgres(users)

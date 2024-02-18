@@ -128,7 +128,7 @@ params = {
 
 ##### Staging area
 
-![Local Image](assets/currentschema.png)
+![Local Image](assets/stagingschema.png)
 
 ##### Staging workflows
 

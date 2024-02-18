@@ -151,12 +151,14 @@ class Items:
             return
         
         response.raise_for_status()
-        items = response.json()
+        res = response.json()
 
         # add; promoted_until, is_hidden, number of photos, description attributes (material)
-        df = pd.DataFrame(items["items"])#.T
+        items = pd.DataFrame(res["items"])#.T
+        users = pd.DataFrame([res["items"][i]["user"] for i in range(len(res["items"]))])
         
-        return df
+        
+        return [items, users]
 
         
     def search_brands(self, brand_id) -> pd.DataFrame:
@@ -169,6 +171,7 @@ class Items:
         items = response.json()
         if "dominant_brand" not in items:
             return
+        
         df = pd.DataFrame([items["dominant_brand"]])
         return(df)
 
