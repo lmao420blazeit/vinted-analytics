@@ -13,11 +13,12 @@ def load_data_from_postgres(conn) -> pd.DataFrame:
     """
     """
     cursor = conn.cursor()
-    query = 'SELECT * FROM samples'  
+    query = 'SELECT DISTINCT user_id FROM products_catalog TABLESAMPLE BERNOULLI(5) LIMIT 50'  
     cursor.execute(query)
     rows = cursor.fetchall()
-    return pd.DataFrame(rows, 
+    user_ids = pd.DataFrame(rows, 
                        columns = ["user_id"])
+    return user_ids
 
 
 @task(name="Batch API calls.",
@@ -33,29 +34,37 @@ def fetch_sample_data(data) -> pd.DataFrame:
     # Specify your transformation logic here
     vinted = Vinted()
     _tracking_list = []
+    _user_list = []
     for index, row in data.iterrows():
-        try:
-            _item = vinted.items.search_item(user_id = row["user_id"])
-            _tracking_list.append(_item)
-        except:
-            pass
+        _item = vinted.items.search_item(user_id = row["user_id"])
+        _tracking_list.append(_item)
+        #_user = pd.read_json(_item["user"], orient='split') # error here
+        #_user_list.append(_user)
+        
         
     if _tracking_list == []:
         #prefect.engine.signals.SKIP()
-        return Failed(message="Dataframe is empty.")
+        return []
 
-    df = pd.concat(_tracking_list, 
+    items = pd.concat(_tracking_list, 
                    axis=0, 
                    ignore_index=True)
-
-    return df
+    
+    #users = pd.concat(_user_list,
+    #                axis = 0, 
+    #                ignore_index= True)
+    
+    return items
 
 @task(name="Drops and type asserts the columns fetched.")
-def transform_data(df: pd.DataFrame, **kwargs) -> None:
+def transform_items(df: pd.DataFrame, **kwargs) -> None:
     """
     """
     cols = ["id", "brand", "size", "catalog_id", "color1_id", "favourite_count", 
-            "view_count", "created_at_ts", "original_price_numeric", "price_numeric", "description", "package_size_id", "service_fee", "city", "country", "color1", "status", "item_closing_action"]
+            "view_count", "created_at_ts", "original_price_numeric", "price_numeric", 
+            "description", "package_size_id", "service_fee", "city", "country", "color1", 
+            "status", "item_closing_action", "user_id"]
+    
     df = df[cols]
 
     df = df.rename(columns={'id': 'product_id', 
@@ -68,11 +77,24 @@ def transform_data(df: pd.DataFrame, **kwargs) -> None:
     df["date"] = datetime.now().strftime("%Y-%m-%d")
     return df
 
+@task(name="Selects users columns.")
+def transform_users(df: pd.DataFrame, **kwargs) -> None:
+    """
+    """
+    cols = ["id", "gender", "item_count", "given_item_count", "taken_item_count", "followers_count", "following_count", "positive_feedback_count", 
+            "negative_feedback_count", "feedback_reputation", "feedback_count", "city_id", "city", "country_id", "country_title", "profile_url"]
+    df = df[cols]
+
+    df = df.rename(columns={'id': 'user_id'})
+
+    df["date"] = datetime.now().strftime("%Y-%m-%d")
+    return df
+
 @task(name= "Export data to 'tracking'.",
       description= "Export tracking data to staging table: 'tracking'",
       timeout_seconds = 360,
       retries= 2)
-def export_data_to_postgres(df: pd.DataFrame, **kwargs) -> None:
+def export_items_to_postgres(df: pd.DataFrame, **kwargs) -> None:
     """
     """
 
@@ -86,17 +108,18 @@ def export_data_to_postgres(df: pd.DataFrame, **kwargs) -> None:
               schema= "public")
 
 
-def load_balancer(df: pd.DataFrame, chunk_size = 10, interval = 600) -> None:
+def load_balancer(df: pd.DataFrame, chunk_size = 10, interval = 360) -> None:
     # total bandwidth = 50*1*24 = 1200
     for start in range(0, df.shape[0], chunk_size):
         tracking_subflow(df = df.iloc[start:start + chunk_size], 
                          name = f"Tracking subflow for: {str(start-chunk_size)}-{str(start)}")
         time.sleep(interval)
 
-@flow(flow_run_name= "{name}", 
+@flow(flow_run_name= "Chunk: {name}", 
       log_prints= True)
 def tracking_subflow(df, name):
-    df = fetch_sample_data(df)
-    df = transform_data(df)
-    print(df)
-    export_data_to_postgres(df)
+    items = fetch_sample_data(df)    
+    #items, users = res
+    items = transform_items(items)
+    #users = transform_users(users)
+    export_items_to_postgres(items)

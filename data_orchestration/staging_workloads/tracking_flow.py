@@ -15,6 +15,7 @@ def tracking():
     conn = psycopg2.connect(**db_params)
     data = load_data_from_postgres(conn)
     load_balancer(data)
+    return
 
 
 if __name__ == "__main__":

@@ -7,7 +7,7 @@ class GoogleSheetsClient:
         self.service = build('sheets', 'v4', credentials=self.credentials)
         self.spreadsheet_id = spreadsheet_id
 
-    def write(self, data):
+    def write(self, data, sheet_name = 'Sheet1!A1'):
         """
         Full load.
         Write data to Google Sheets.
@@ -15,23 +15,44 @@ class GoogleSheetsClient:
         :param range_name: Range in A1 notation where the data will be written, e.g., 'Sheet1!A1'.
         :return: None
         """
+        
         sheet = self.service.spreadsheets()
-        rangeAll = 'Sheet1!A1:Z'
+        rangeAll = sheet_name
         body = {}
         # clear sheet
         self.service.spreadsheets().values().clear(spreadsheetId=self.spreadsheet_id, 
                                                     range=rangeAll,
                                                     body=body ).execute()
-        
         # upload data
         body = {'values': data}
         sheet.values().update(
-            spreadsheetId=self.spreadsheet_id,
-            range='Sheet1!A1',
-            valueInputOption='RAW',
-            body=body
+            spreadsheetId= self.spreadsheet_id,
+            range= sheet_name,
+            valueInputOption= 'RAW',
+            body= body
         ).execute()
         return
+    
+    def create_sheet(service, spreadsheet_id, sheet_title):
+        # Define the request body to create a new sheet with the given title
+        body = {
+            'requests': [{
+                'addSheet': {
+                    'properties': {
+                        'title': sheet_title
+                    }
+                }
+            }]
+        }
+        
+        # Execute the request to create the new sheet
+        response = service.spreadsheets().batchUpdate(
+            spreadsheetId=spreadsheet_id,
+            body=body
+        ).execute()
+        
+        # Extract and return the sheet ID of the newly created sheet
+        return response['replies'][0]['addSheet']['properties']['sheetId']
 
 
 if __name__ == "__main__":

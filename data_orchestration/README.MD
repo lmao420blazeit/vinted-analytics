@@ -141,3 +141,17 @@ def export_data_to_postgres(data: pd.DataFrame, engine) -> None:
 ```
 
 - **Idempotency**: the insert_on_confict_nothing is a callable function which acts as an upsert preventing duplicate records. This block could execute multiple times with the same inputs but will only write to db once.
+
+## Best practices
+
+Although Python is a dynamic language, having type hints and type checkers can help with incompatibility issues and troubleshooting during runtime.
+
+- **Typing**: matching inputs and outputs with expected types
+
+``` python
+from typing import List, Callable
+```
+
+- **Data class**: data representation classes which add some cool functionalities (__post__init__ method), inheritance and custom operators at the cost of a bigger overhead during runtime.
+
+- **Testing**: SOON

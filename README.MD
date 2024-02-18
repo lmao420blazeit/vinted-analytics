@@ -147,11 +147,17 @@ params = {
 
 Currently just a few descriptive simple graphs. No callback functions.
 
+### Streamlit
+
 ** Brands **
 ![Local Image](assets/dashboard_brands.png)
 
 ** Status **
 ![Local Image](assets/dashboard_status.png)
+
+### Looker Studio
+
+[Daily Snapshot Report](https://lookerstudio.google.com/s/rPPHeQ0OlOk) of the Vinted Pipeline status.
 
 ## Findings
 
