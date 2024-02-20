@@ -37,7 +37,7 @@ def load_data_from_api(vinted, nbrRows: int, batch_size: int, item: str) -> pd.D
 @flow(name="Subflow for catalog.", 
       flow_run_name= "Subflow for catalog {item}",
       log_prints= True,
-      timeout = 600)
+      timeout_seconds = 600)
 def catalog_subflow(item, nbrRows, batch_size, vinted, engine, sample_frac):
     df = load_data_from_api(vinted = vinted,
                             nbrRows = nbrRows,
@@ -48,9 +48,6 @@ def catalog_subflow(item, nbrRows, batch_size, vinted, engine, sample_frac):
     #create_artifacts(data = df)
     export_data_to_postgres(data = df, 
                             engine = engine)     # upload first to products due to FK referencing
-    export_sample_to_postgres(df, 
-                              sample_frac= sample_frac,
-                              engine = engine)
     return
 
 @task(name="Drop columns and rename.")

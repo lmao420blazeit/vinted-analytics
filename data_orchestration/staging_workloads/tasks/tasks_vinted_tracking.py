@@ -89,7 +89,7 @@ def transform_users(df: pd.DataFrame, **kwargs) -> None:
     df["date"] = datetime.now().strftime("%Y-%m-%d")
     return df
 
-@task(name= "Export data to 'tracking'.",
+@task(name= "Export data to 'tracking_staging'.",
       description= "Export tracking data to staging table: 'tracking'",
       timeout_seconds = 360,
       retries= 2)
@@ -97,7 +97,7 @@ def export_items_to_postgres(df: pd.DataFrame, **kwargs) -> None:
     """
     """
 
-    table_name = 'tracking'  # Specify the name of the table to export data to
+    table_name = 'tracking_staging'  # Specify the name of the table to export data to
     engine = create_engine('postgresql://user:4202@localhost:5432/vinted-ai')
     df.to_sql(table_name, 
               engine, 
