@@ -5,8 +5,13 @@ import plotly.express as px
 import seaborn as sns
 import matplotlib.pyplot as plt
 import plotly.graph_objects as go
+import sys
+
+sys.path.append("C:\\Users\\Miguel\\Desktop\\dataengineeringpr\\vinted-prefect")
+
 import subprocess
 from wordcloud import WordCloud
+from model_development.kde_brands import kde_brands
 
 from wordcloud import WordCloud, STOPWORDS
 import plotly.graph_objs as go
@@ -181,11 +186,14 @@ def main():
 
     res = smf.ols(formula="price ~ C(size_title)", 
                   data=st.session_state.products_catalog).fit()
-    print(res.params)
+
 
     res = smf.ols(formula="price ~ C(status)", 
                   data=st.session_state.products_catalog).fit()
-    print(res.params)
+    
+    data = kde_brands()
+    st.table(data)
+
 
 
 main()
