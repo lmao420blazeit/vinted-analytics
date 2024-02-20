@@ -29,20 +29,20 @@ The purpose of this project is to find key insights about data from Vinted which
 - [x] Create a basic data pipeline with prefect and postgres
 - [ ] Create a "Shoe or Clothing" binary label based on sizes
 - [ ] Documentation
-- [ ] Refactor tracking flow to schedule multiple subflows and use persistent results
+- [x] Refactor tracking flow to schedule multiple subflows and use persistent results
 - [ ] Cluster assessment of products in dashboard
 - [ ] Use text tokens to predict prices (remove brand names)
 - [ ] Cluster brand names by similarity (yeezy/adidas, nike/jordan, etc)
 
 ### Backlog
 
-- [ ] Work on the dashboard
+- [x] Work on the dashboard
 - [ ] Develop a pipeline to track saleability
-- [ ] Develop a pipeline to track brand, catalog_id, colour statistics
+- [x] Develop a pipeline to track brand, catalog_id
 - [ ] Cluster catalog_id's into groups
-- [ ] Create dim tables for brands, sizes and colours
-- [ ] Normalize the database
-- [ ] Find a way to overcome API rate limits (currently implemented Exponential Backoff on requests)
+- [x] Create dim tables for brands, sizes and colours
+- [x] Normalize the database
+- [x] Find a way to overcome API rate limits (currently implemented Exponential Backoff on requests)
 
 ### Main roadblocks
 
@@ -128,7 +128,7 @@ params = {
 
 ##### Staging area
 
-![Local Image](assets/stagingschema.png)
+![Local Image](assets/staging.png)
 
 ##### Staging workflows
 
@@ -142,6 +142,11 @@ params = {
     - Export prefect artifacts
     - Export data to pg
     - Export samples to pg
+
+##### Normalized Schema
+
+![Local Image](assets/starschema.png)
+Star Schema
 
 ## Dashboard
 

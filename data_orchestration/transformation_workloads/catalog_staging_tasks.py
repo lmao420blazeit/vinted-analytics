@@ -1,7 +1,7 @@
 from prefect import task
 import pandas as pd
 from sqlalchemy import create_engine
-from ..utils import upsert_brands_dim
+from utils import upsert_catalog_dim, upsert_catalog_fact
 
 @task(name="Load catalog_staging for backfilling")
 def load_from_catalog_staging(engine):
@@ -26,8 +26,14 @@ def catalog_dim_transform(data):
     data = data[["catalog_id", "code", "title", "parent_id", "parent_title"]]
     return (data)
 
-@task(name="Export brands to catalog_dim")
-def catalog_to_dim(data: pd.DataFrame, engine) -> None:
+@task(name = "Transform to catalog_fact")
+def catalog_fact_transform(data):
+    # ensure only the latest date is inserted
+    data = data[["catalog_id", "date", "item_count"]]
+    return (data)
+
+@task(name="Export data to catalog_dim")
+def export_catalog_dim(data: pd.DataFrame, engine) -> None:
     """
     Exports metadata to a PostgreSQL table.
 
@@ -39,18 +45,18 @@ def catalog_to_dim(data: pd.DataFrame, engine) -> None:
         None
     """
     #schema_name = 'public'  # Specify the name of the schema to export data to
-    table_name = 'brands_dim'  # Specify the name of the table to export data to
+    table_name = 'catalog_dim'  # Specify the name of the table to export data to
     data.to_sql(table_name, 
                 engine, 
                 if_exists = "append", 
                 index = False,
-                method=upsert_brands_dim
+                method=upsert_catalog_dim
                 )
     
     return
 
-@task(name="Export brands to catalog_fact")
-def catalog_to_fact(data: pd.DataFrame, engine) -> None:
+@task(name="Export data to catalog_fact")
+def export_catalog_fact(data: pd.DataFrame, engine) -> None:
     """
     Exports metadata to a PostgreSQL table.
 
@@ -62,12 +68,13 @@ def catalog_to_fact(data: pd.DataFrame, engine) -> None:
         None
     """
     #schema_name = 'public'  # Specify the name of the schema to export data to
-    data = data[["catalog_id", "date", "item_count"]]
-    table_name = 'brands_fact'  # Specify the name of the table to export data to
+    #data = data[["catalog_id", "date", "item_count"]]
+    table_name = 'catalog_fact'  # Specify the name of the table to export data to
     data.to_sql(table_name, 
                 engine, 
-                if_exists = "replace", 
-                index = False
+                if_exists = "append", 
+                index = False,
+                method= upsert_catalog_fact
                 )
     
     return

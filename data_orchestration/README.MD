@@ -155,3 +155,14 @@ from typing import List, Callable
 - **Data class**: data representation classes which add some cool functionalities (__post__init__ method), inheritance and custom operators at the cost of a bigger overhead during runtime.
 
 - **Testing**: SOON
+
+# Database Architecture
+
+## Staging Area
+
+![Local Image](assets/staging.png)
+Staging
+
+## Semi-Normalized Layer
+![Local Image](assets/starschema.png)
+Star Schema

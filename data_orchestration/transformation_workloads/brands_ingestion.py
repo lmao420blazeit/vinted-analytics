@@ -1,7 +1,7 @@
 from prefect import task
 import pandas as pd
 from sqlalchemy import create_engine
-from ..utils import upsert_brands_dim
+from utils import upsert_brands_dim
 
 @task(name="Load data for backfilling")
 def load_from_brands_interest(engine):
@@ -9,12 +9,12 @@ def load_from_brands_interest(engine):
         # try delta load
         latest_record = "SELECT MAX(date) FROM brands_fact"
         date = pd.read_sql(latest_record, engine)["date"]
-        sql_query = f"SELECT * FROM brands_interest WHERE date > '{date}'"
+        sql_query = f"SELECT * FROM brands_staging WHERE date > '{date}'"
         df = pd.read_sql(sql_query, engine)
         
     except:
         # full load
-        sql_query = "SELECT * FROM brands_interest"
+        sql_query = "SELECT * FROM brands_staging"
         df = pd.read_sql(sql_query, engine)
 
     return df
