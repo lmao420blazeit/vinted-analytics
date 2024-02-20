@@ -11,7 +11,7 @@ sys.path.append("C:\\Users\\Miguel\\Desktop\\dataengineeringpr\\vinted-prefect")
 
 import subprocess
 from wordcloud import WordCloud
-from model_development.kde_brands import kde_brands
+from model_development.density_estimation.kde_brands import kde_brands
 
 from wordcloud import WordCloud, STOPWORDS
 import plotly.graph_objs as go
