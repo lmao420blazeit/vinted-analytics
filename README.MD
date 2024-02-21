@@ -1,5 +1,7 @@
 # Project Overview
 
+![Local Image](assets/project_schema.png)
+
 The purpose of this project is to find key insights about data from Vinted which can help users to determine how to best sell their products. Some concerns users face when selling articles are:
 
 ##### Price concerns
@@ -50,10 +52,6 @@ The purpose of this project is to find key insights about data from Vinted which
 - Defining saleability. The default metrics vinted used are "views" and "likes". I propose the creation of another metrics, "mean-time-to-sale".
 
 ## Data Engineering
-
-### Architecture
-
-
 
 ### Deconstructing Vinted API
 

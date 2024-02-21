@@ -1,6 +1,6 @@
 from prefect import flow
 from sqlalchemy import create_engine
-from tracking_ingestion_tasks import *
+from data_orchestration.transformation_workloads.tasks.tracking_ingestion_tasks import *
 
 @flow(name = "Normalize tracking_staging")
 def normalize_tracking_staging():

@@ -190,9 +190,6 @@ def main():
 
     res = smf.ols(formula="price ~ C(status)", 
                   data=st.session_state.products_catalog).fit()
-    
-    data = kde_brands()
-    st.table(data)
 
 
 

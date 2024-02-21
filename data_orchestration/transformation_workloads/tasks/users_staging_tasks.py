@@ -24,7 +24,7 @@ def load_from_users_staging(engine):
 @task(name = "Transform to 'city_dim'")
 def city_dim_transform(data):
     # ensure only the latest date is inserted
-    data = data[data['date'] == data["date"].max()]
+    #data = data[data['date'] == data["date"].max()]
     data = data[["city", "country_id", "city_id"]]
     data = data.dropna(subset = ["city_id"])
 
@@ -141,6 +141,7 @@ def export_users_dim(data: pd.DataFrame, engine) -> None:
         None
     """
     #schema_name = 'public'  # Specify the name of the schema to export data to
+    print(data)
     table_name = 'users_dim'  # Specify the name of the table to export data to
     data.to_sql(table_name, 
                 engine, 

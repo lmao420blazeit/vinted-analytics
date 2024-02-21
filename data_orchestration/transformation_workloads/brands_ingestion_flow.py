@@ -1,6 +1,6 @@
 from prefect import flow
 from sqlalchemy import create_engine
-from data_orchestration.transformation_workloads.brands_ingestion import *
+from data_orchestration.transformation_workloads.tasks.brands_ingestion import *
 
 @flow(name = "Normalize brands staging")
 def normalize_brands_staging():

@@ -182,5 +182,14 @@ def kde_brands():
     return(dt_list)
 
 
-data = kde_brands()
+if __name__ == "__main__":
+    data = kde_brands()
+    pivot_table = pd.pivot_table(data, values='brand_premium', index='catalog_id', columns='brand_title', aggfunc='sum', fill_value=0)
+    pivot_table.index = pivot_table.index.astype(str)
+    
+    import plotly.express as px
+
+    fig = px.imshow(pivot_table, 
+                    text_auto=True)
+    fig.show()
 

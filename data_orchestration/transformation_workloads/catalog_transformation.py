@@ -1,6 +1,6 @@
 from prefect import flow
 from sqlalchemy import create_engine
-from catalog_staging_tasks import *
+from data_orchestration.transformation_workloads.tasks.catalog_staging_tasks import *
 
 @flow(name = "Normalize catalog_staging")
 def normalize_catalog_staging():

@@ -179,7 +179,11 @@ def kde_brands():
     dt_list['status_premium'] = (dt_list['Q2'] - dt_list['median_Q2'])/(dt_list['median_Q2'] + dt_list['Q2'])
     dt_list = dt_list.drop("median_Q2", axis = 1)
 
-    pivot_table = pd.pivot_table(dt_list, values='status_premium', index='catalog_id', columns='status', aggfunc='sum', fill_value=0)
+    return(dt_list)
+
+if __name__ == "__main__":
+    data = kde_brands()
+    pivot_table = pd.pivot_table(data, values='status_premium', index='catalog_id', columns='status', aggfunc='sum', fill_value=0)
     pivot_table.index = pivot_table.index.astype(str)
     # reorder
     pivot_table = pivot_table[["Satisfatório", "Bom", "Muito bom", "Novo sem etiquetas", "Novo com etiquetas"]]
@@ -189,15 +193,10 @@ def kde_brands():
     fig = px.imshow(pivot_table, 
                     text_auto=True)
     fig.show()
-    pivot_table = pd.pivot_table(dt_list, values='Q2', index='catalog_id', columns='status', aggfunc='sum', fill_value=0)
+    pivot_table = pd.pivot_table(data, values='Q2', index='catalog_id', columns='status', aggfunc='sum', fill_value=0)
     pivot_table.index = pivot_table.index.astype(str)
     pivot_table = pivot_table[["Satisfatório", "Bom", "Muito bom", "Novo sem etiquetas", "Novo com etiquetas"]]
     fig = px.imshow(pivot_table, 
                     text_auto=True)
     fig.show()
-
-    return(dt_list)
-
-
-kde_brands()
 
