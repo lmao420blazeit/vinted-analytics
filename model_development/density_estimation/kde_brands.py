@@ -178,19 +178,9 @@ def kde_brands():
     
     dt_list['brand_premium'] = (dt_list['Q2']-dt_list['median_Q2'])/(dt_list['median_Q2']+dt_list['Q2'])
     dt_list = dt_list.drop("median_Q2", axis = 1)
-    print(dt_list)
-    pivot_table = pd.pivot_table(dt_list, values='brand_premium', index='catalog_id', columns='brand_title', aggfunc='sum', fill_value=0)
-    pivot_table.index = pivot_table.index.astype(str)
-    # reorder
-    #pivot_table = pivot_table[["Satisfatório", "Bom", "Muito bom", "Novo sem etiquetas", "Novo com etiquetas"]]
 
-    import plotly.express as px
-
-    fig = px.imshow(pivot_table, 
-                    text_auto=True)
-    fig.show()
     return(dt_list)
 
 
-kde_brands()
+data = kde_brands()
 
