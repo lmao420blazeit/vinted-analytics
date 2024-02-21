@@ -39,7 +39,6 @@ The purpose of this project is to find key insights about data from Vinted which
 - [x] Work on the dashboard
 - [ ] Develop a pipeline to track saleability
 - [x] Develop a pipeline to track brand, catalog_id
-- [ ] Cluster catalog_id's into groups
 - [x] Create dim tables for brands, sizes and colours
 - [x] Normalize the database
 - [x] Find a way to overcome API rate limits (currently implemented Exponential Backoff on requests)
@@ -51,6 +50,10 @@ The purpose of this project is to find key insights about data from Vinted which
 - Defining saleability. The default metrics vinted used are "views" and "likes". I propose the creation of another metrics, "mean-time-to-sale".
 
 ## Data Engineering
+
+### Architecture
+
+
 
 ### Deconstructing Vinted API
 
@@ -124,29 +127,17 @@ params = {
 }
 ```
 
-### Current Schema
+### Schema
 
-##### Staging area
+##### Staging layer
 
 ![Local Image](assets/staging.png)
 
-##### Staging workflows
-
-![Local Image](assets/mainflow.png)
-
-1. Load raw data from api
-2. Drop and rename columns
-3. Format sizes into unique groups (ex. M / 36 / ... -> M)
-4. TODO: Add row "is_sneaker" based on sizes
-5. Export data:
-    - Export prefect artifacts
-    - Export data to pg
-    - Export samples to pg
-
-##### Normalized Schema
+##### Normalized Schema (Star Schema)
 
 ![Local Image](assets/starschema.png)
-Star Schema
+
+##### Consumption layer
 
 ## Dashboard
 

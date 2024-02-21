@@ -33,7 +33,7 @@ def city_dim_transform(data):
 @task(name = "Transform to 'country_dim'")
 def country_dim_transform(data):
     # ensure only the latest date is inserted
-    data = data[data['date'] == data["date"].max()]
+    # data = data[data['date'] == data["date"].max()]
     data = data[["country_id", "country_title"]]
     data = data.dropna(subset = ["country_id"])
 

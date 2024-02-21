@@ -13,24 +13,31 @@ engine = create_engine(uri)
 # DIMENSIONALITY = 3 -> 67
 
 def load_data():
+    
     # this doesnt work well
     sql_query = """
-    WITH
-    sampled_data AS (
+    WITH Counts AS (
         SELECT
-        *,
-        ROW_NUMBER() OVER (
-            PARTITION BY
+            catalog_id as c,
+            COUNT(*) AS sample_count
+        FROM products_catalog
+        WHERE date >= CURRENT_DATE - INTERVAL '7 days'
+        GROUP BY 
             catalog_id
-            ORDER BY
-            RANDOM()
-        ) AS rn
-        FROM
-        products_catalog
     )
-    SELECT *
-    FROM sampled_data
-    WHERE rn <= 100 AND date >= CURRENT_DATE - INTERVAL '7 days';
+    SELECT subquery.*
+    FROM (
+        SELECT 
+            catalog_id,
+            price,
+            product_id,
+            ROW_NUMBER() OVER (PARTITION BY t.catalog_id) AS row_num
+        FROM products_catalog t
+        JOIN Counts c 
+            ON t.catalog_id = c.c
+        WHERE c.sample_count >= 30 
+    ) AS subquery
+    WHERE row_num <= 30 ;
     """
 
     data = pd.read_sql(sql_query, engine)
@@ -109,8 +116,7 @@ def main():
     df = pd.DataFrame(sample_list, index=unique_catalog_ids)
     df = df.T
     df = df.map(remove_list)  # Removing lists
-    dt_list = pd.DataFrame(data_list, columns = ["Q1", "Q2", "Q3", "Skew", "Kurt"])
-    dt_list["catalog_id"] = unique_catalog_ids
+    dt_list = pd.DataFrame(data_list, columns = ["Q1", "Q2", "Q3", "Skew", "Kurt"], index = unique_catalog_ids)
     print(dt_list)
 
 

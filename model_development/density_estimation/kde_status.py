@@ -27,30 +27,30 @@ def load_data():
     sql_query = """
     WITH Counts AS (
         SELECT
-            brand_title as b,
+            status as b,
             catalog_id as c,
             COUNT(*) AS sample_count
         FROM products_catalog
         WHERE date >= CURRENT_DATE - INTERVAL '7 days'
         GROUP BY 
-            brand_title, 
+            status, 
             catalog_id
     )
     SELECT subquery.*
     FROM (
         SELECT 
-            brand_title,
+            status,
             catalog_id,
             price,
             product_id,
-            ROW_NUMBER() OVER (PARTITION BY t.brand_title, t.catalog_id) AS row_num
+            ROW_NUMBER() OVER (PARTITION BY t.status, t.catalog_id) AS row_num
         FROM products_catalog t
         JOIN Counts c 
-            ON t.brand_title = c.b 
+            ON t.status = c.b 
             AND t.catalog_id = c.c
-        WHERE c.sample_count >= 30 
+        WHERE c.sample_count >= 20 
     ) AS subquery
-    WHERE row_num <= 30 ;
+    WHERE row_num <= 20 ;
     """
 
     data = pd.read_sql(sql_query, engine)
@@ -132,11 +132,11 @@ def kde_brands():
     for catalog_id in unique_catalog_ids:
 
         catalog_data = data[data["catalog_id"] == catalog_id]
-        unique_brand_title = catalog_data["brand_title"].unique()
+        unique_status = catalog_data["status"].unique()
 
-        for brand_title in unique_brand_title:
+        for status in unique_status:
 
-            brand_data = catalog_data[catalog_data["brand_title"] == brand_title]
+            brand_data = catalog_data[catalog_data["status"] == status]
             percentile_85 = brand_data['price'].quantile(0.85)
             brand_data = brand_data[brand_data["price"] <= percentile_85]
             
@@ -155,7 +155,7 @@ def kde_brands():
             sample_list.append(samples.tolist())
             data_list.append(compute_statistics(samples))
             catalog_list.append(catalog_id)
-            brand_list.append(brand_title)
+            brand_list.append(status)
             sample_size.append(len(X))
             bandwidth_list.append(model.bandwidth_)
             
@@ -164,7 +164,7 @@ def kde_brands():
     df = df.map(remove_list)  # Removing lists
     dt_list = pd.DataFrame(data_list, 
                            columns = ["Q1", "Q2", "Q3", "Skew", "Kurt"])
-    dt_list["brand_title"] = brand_list
+    dt_list["status"] = brand_list
     dt_list["catalog_id"] = catalog_list
     dt_list["sample_size"] = sample_size
     dt_list["bandwidth"] = bandwidth_list
@@ -176,19 +176,26 @@ def kde_brands():
                        right_on='catalog_id',
                        right_index=True)
     
-    dt_list['brand_premium'] = (dt_list['Q2']-dt_list['median_Q2'])/(dt_list['median_Q2']+dt_list['Q2'])
+    dt_list['status_premium'] = (dt_list['Q2'] - dt_list['median_Q2'])/(dt_list['median_Q2'] + dt_list['Q2'])
     dt_list = dt_list.drop("median_Q2", axis = 1)
-    print(dt_list)
-    pivot_table = pd.pivot_table(dt_list, values='brand_premium', index='catalog_id', columns='brand_title', aggfunc='sum', fill_value=0)
+
+    pivot_table = pd.pivot_table(dt_list, values='status_premium', index='catalog_id', columns='status', aggfunc='sum', fill_value=0)
     pivot_table.index = pivot_table.index.astype(str)
     # reorder
-    #pivot_table = pivot_table[["Satisfatório", "Bom", "Muito bom", "Novo sem etiquetas", "Novo com etiquetas"]]
+    pivot_table = pivot_table[["Satisfatório", "Bom", "Muito bom", "Novo sem etiquetas", "Novo com etiquetas"]]
 
     import plotly.express as px
 
     fig = px.imshow(pivot_table, 
                     text_auto=True)
     fig.show()
+    pivot_table = pd.pivot_table(dt_list, values='Q2', index='catalog_id', columns='status', aggfunc='sum', fill_value=0)
+    pivot_table.index = pivot_table.index.astype(str)
+    pivot_table = pivot_table[["Satisfatório", "Bom", "Muito bom", "Novo sem etiquetas", "Novo com etiquetas"]]
+    fig = px.imshow(pivot_table, 
+                    text_auto=True)
+    fig.show()
+
     return(dt_list)
 
 
