@@ -40,18 +40,21 @@ class LogisticRegressor:
         self.data = pd.read_sql(sql_query, self.engine)
         self.data = self.data[["price", "brand_title", "size_title", "status", "catalog_id"]]
         # create target variable
-        self.data["target"] = self.data["price"].apply(lambda x: 1 if x > self.data["price"].quantile(0.85) else 0)
+        self.data["target"] = self.data["price"].apply(lambda x: 1 if x > self.data["price"].quantile(0.80) else 0)
 
     def preprocess_data(self):
-        from sklearn import svm
+        from sklearn.preprocessing import MinMaxScaler
 
-        clf = svm.OneClassSVM(nu=0.1, 
-                              kernel="rbf", 
-                              gamma=0.1)
-        clf.fit(self.data["price"].values.reshape(-1, 1))
-        y_pred_train = clf.predict(self.data["price"].values.reshape(-1, 1))
-        self.data["svm"] = y_pred_train
-        self.data = self.data[self.data["svm"] == 1]
+        # scaling the target variable
+        # feature scaling is good to improve convergence of steepest descent algo
+        scaler = MinMaxScaler().fit(self.data["price"].values.reshape(-1, 1))
+        #clf = svm.OneClassSVM(nu=0.1, 
+        #                      kernel="rbf", 
+        #                      gamma=0.1)
+        #clf.fit(self.data["price"].values.reshape(-1, 1))
+        #y_pred_train = clf.predict(self.data["price"].values.reshape(-1, 1))
+        #self.data["svm"] = y_pred_train
+        self.data["price"] = scaler.transform(self.data["price"].values.reshape(-1, 1))
 
     def __remove_imbalance(self):
         def stratified_sampling(group):
@@ -65,7 +68,7 @@ class LogisticRegressor:
 
     def data_transform(self):
         """
-        Preprocess data by encoding categorical variables and creating target and label dataframes.
+        Preprocess data by encoding categorical variables and create target and label dataframes.
         """
         self.__remove_imbalance()
         ordinal_encoder = OrdinalEncoder(categories=[["Satisfatório", "Bom", "Muito bom", "Novo sem etiquetas", "Novo com etiquetas"]])
@@ -154,7 +157,7 @@ class LogisticRegressor:
 
     def deploy_model(self, run_name="LogisticRegressor"):
         """
-        Deploy the trained model and log metrics using MLflow.
+        Log experiments to mlflow.
         
         Parameters:
             - run_name (str): The name of the MLflow run.

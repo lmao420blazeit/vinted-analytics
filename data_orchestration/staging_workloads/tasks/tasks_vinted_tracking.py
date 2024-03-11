@@ -13,7 +13,7 @@ def load_data_from_postgres(conn) -> pd.DataFrame:
     """
     """
     cursor = conn.cursor()
-    query = 'SELECT DISTINCT user_id FROM products_catalog TABLESAMPLE BERNOULLI(5) LIMIT 50'  
+    query = 'SELECT DISTINCT user_id FROM products_catalog TABLESAMPLE BERNOULLI(5) LIMIT 60'  
     cursor.execute(query)
     rows = cursor.fetchall()
     user_ids = pd.DataFrame(rows, 
@@ -125,7 +125,7 @@ def export_users_to_postgres(df: pd.DataFrame, **kwargs) -> None:
 
 
 
-def load_balancer(df: pd.DataFrame, chunk_size = 10, interval = 360) -> None:
+def load_balancer(df: pd.DataFrame, chunk_size = 12, interval = 360) -> None:
     # total bandwidth = 50*1*24 = 1200
     for start in range(0, df.shape[0], chunk_size):
         tracking_subflow(df = df.iloc[start:start + chunk_size], 

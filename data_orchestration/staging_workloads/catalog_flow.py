@@ -50,7 +50,8 @@ if __name__ == "__main__":
                         parameters={"sample_frac": 0.001,
                                     "batch_size": 500,
                                     "nbrRows": 500,
-                                    "item_ids": [221, 1242, 2320, 1811, 267, 1812, 98, 246, 287, 2964] # [t shirts, trainers, sweaters, books, hoodies and sweaters, zip hoodies, sunglasses, backpacks, caps, gorros]
+                                    "item_ids": [221, 1242, 2320, 1811, 267, 1812, 98, 246, 287, 2964] 
+                                    # [t shirts, trainers, sweaters, books, hoodies and sweaters, zip hoodies, sunglasses, backpacks, caps, gorros]
                                     },
                         interval=3600)
     serve(deployment)"""

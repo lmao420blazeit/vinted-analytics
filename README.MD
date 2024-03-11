@@ -1,20 +1,43 @@
+<h3 style="text-align: center;">Vinted Analytics - Analysis of a Blooming Second Hand Marketplace</h3>
+
+
 # Project Overview
+
+## Intro
+
+According to a report by ThredUp, a leading online resale platform, the resale market is projected to reach $64 billion by 2024, highlighting the growing appeal of pre-owned fashion among consumers. (ThredUp's 2021 Resale Report)
+
+Main market drivers are:
+- Changing consumer patterns
+- Economic opportunities and affordability
+- Circular economy and environmental concerns
+- Online platforms such as Vinted, Depop, Poshmar and ThredUp
 
 ![Local Image](assets/project_schema.png)
 
 The purpose of this project is to find key insights about data from Vinted which can help users to determine how to best sell their products. Some concerns users face when selling articles are:
 
-##### Price concerns
-- What are the price ranges for each article?
-    -> price suggestion system based on size, status and brand, sampling and confidence intervals
-        - suggestions based on price distribution and median prices
-        - suggestions based on saleability metrics (not yet possible to implement)
-- How article labels, such as size, brands and status relate to price dynamics?
+## Business Case Study
 
-##### Saleability concerns
+Each platform has its own market dynamics, I will focus on the selling dynamics. In order to maximize profit, these are some questions we are aiming to answer:
 
-- What's the current popularity for each article, brand and size?
-- How to predict saleability given the input article labels?
+-  ([Which are the most profitable product categories?](#Profitable-product-categories))
+- Which are the most profitable brands?
+- What is the premium attributed to each different status?
+- What is the expected selling price for each prouct category?
+- Are there arbitrage opportunities in iliquid products markets?
+- Maximizing product exposure
+    - Improving Vinted SEO by including keywords in the description
+    - Improving Vinted SEO by generate product description using parameterized LLM queries
+    - Improving Vinted SEO by creating advertisements in the hours with biggest user flow
+- What is the best product mix (Product Bundling Design)
+    - Which products are complementary
+
+##### Limitations
+
+- Vinted only provides the 
+- Vinted API endpoints doesn't provide a direct way to get the brands, sizes, colours, gender, and status variables
+- Vinted API frequests are rate limited
 
 ##### Other
 
@@ -29,7 +52,6 @@ The purpose of this project is to find key insights about data from Vinted which
 
 - [x] Create an API to connect to Vinted Endpoints 
 - [x] Create a basic data pipeline with prefect and postgres
-- [ ] Create a "Shoe or Clothing" binary label based on sizes
 - [ ] Documentation
 - [x] Refactor tracking flow to schedule multiple subflows and use persistent results
 - [ ] Cluster assessment of products in dashboard
@@ -45,101 +67,15 @@ The purpose of this project is to find key insights about data from Vinted which
 - [x] Normalize the database
 - [x] Find a way to overcome API rate limits (currently implemented Exponential Backoff on requests)
 
-### Main roadblocks
-
-- Vinted API endpoints doesn't provide a direct way to get the brands, sizes, colours, gender, and status variables
-- Vinted API frequently rate limits my requests
-- Defining saleability. The default metrics vinted used are "views" and "likes". I propose the creation of another metrics, "mean-time-to-sale".
-
-## Data Engineering
-
-### Deconstructing Vinted API
-
-##### APK Decompiling
-
-We can download some  the APK from the Vinted app store and decompile it with [apktool](https://ibotpeaches.github.io/Apktool/).
-
-```bash
-apktool d vinted.apk
-```
-
-Other alternatives are:
-- Dex2jar
-- Jadx
-
-##### APK Decompiled
-
-Once the app is decompiled look into words such as 'api', 'latitude', 'brand_ids', 'rest', 'status', etc.
-
-![Local Image](assets/vintedapi.png)
-
-#### Useful Endpoints
-
-``` json
-params = {
-    "search_text": "+".join(
-        map(str, [tpl[1] for tpl in querys if tpl[0] == "search_text"])
-    ),
-    "catalog_ids": ",".join(
-        map(str, [tpl[1] for tpl in querys if tpl[0] == "catalog_ids[]"])
-    ),
-    "color_ids": ",".join(
-        map(str, [tpl[1] for tpl in querys if tpl[0] == "color_id[]"])
-    ),
-    "brand_ids": ",".join(
-        map(str, [tpl[1] for tpl in querys if tpl[0] == "brand_ids[]"])
-    ),
-    "size_ids": ",".join(
-        map(str, [tpl[1] for tpl in querys if tpl[0] == "size_id[]"])
-    ),
-    "material_ids": ",".join(
-        map(str, [tpl[1] for tpl in querys if tpl[0] == "material_id[]"])
-    ),
-    "status_ids": ",".join(
-        map(str, [tpl[1] for tpl in querys if tpl[0] == "status[]"])
-    ),
-    "country_ids": ",".join(
-        map(str, [tpl[1] for tpl in querys if tpl[0] == "country_id[]"])
-    ),
-    "city_ids": ",".join(
-        map(str, [tpl[1] for tpl in querys if tpl[0] == "city_id[]"])
-    ),
-    "is_for_swap": ",".join(
-        map(str, [1 for tpl in querys if tpl[0] == "disposal[]"])
-    ),
-    "currency": ",".join(
-        map(str, [tpl[1] for tpl in querys if tpl[0] == "currency"])
-    ),
-    "price_to": ",".join(
-        map(str, [tpl[1] for tpl in querys if tpl[0] == "price_to"])
-    ),
-    "price_from": ",".join(
-        map(str, [tpl[1] for tpl in querys if tpl[0] == "price_from"])
-    ),
-    "page": page,
-    "per_page": batch_size,
-    "order": ",".join(
-        map(str, [tpl[1] for tpl in querys if tpl[0] == "order"])
-    ),
-    "time": time
-}
-```
-
-### Schema
-
-##### Staging layer
-
-![Local Image](assets/staging.png)
-
-##### Normalized Schema (Star Schema)
-
-![Local Image](assets/starschema.png)
-
-##### Consumption layer
-
 ## Dashboard
 
 Currently just a few descriptive simple graphs. No callback functions.
+
+### Looker Studio
+
+[Daily Snapshot Report](https://lookerstudio.google.com/s/rPPHeQ0OlOk) of the Vinted Pipeline status.
+
+![Local Image](assets/looker_studio.png)
 
 ### Streamlit
 
@@ -149,11 +85,7 @@ Currently just a few descriptive simple graphs. No callback functions.
 ** Status **
 ![Local Image](assets/dashboard_status.png)
 
-### Looker Studio
-
-[Daily Snapshot Report](https://lookerstudio.google.com/s/rPPHeQ0OlOk) of the Vinted Pipeline status.
-
-## Findings
+## Exploration
 
 ### How article status conditions price
 
@@ -217,6 +149,45 @@ It's clear there are underlying covariate which explain the deviations between b
 #### Shoes
 ![Local Image](assets/size2_tukey.png)
 
+
+## Business Questions
+
+#### Profitable product categories
+
+I get it. This isn't an answer, yet this gives me lots of insights. Product categories is the first hierarchical step in finding profitable solutions.
+
+- Category 1242 (Trainers) is a good category to sell only if you have an interesting article (positive skewness, low kurtosis)
+- Category 221 is very hard to sell at Q2-Q3 prices (high positive skewness and high kurtosis)
+- Category 267 (hoodies and sweaters) and 246 (backpacks) are solid choices
+- Category 1806 (plain t shirts) is okay.
+- Category 1812 (zip through hoodies) is very similar to 267. Solid choice
+
+
+| category |        Q1   |      Q2    |     Q3     |  Skew    |  Kurt    |
+|------|------------|------------|------------|----------|----------|
+|  98  | 10.389857  | 16.110513  | 38.293716  | 0.737483 | -0.874382|
+| 221  |  1.524014  |  6.018118  | 14.789115  | 1.760902 |  2.641145|
+| 246  | 10.099439  | 16.023626  | 23.070975  | 1.224792 |  1.111381|
+| 267  | 10.726804  | 17.536312  | 27.079664  | 1.185220 |  0.463275|
+| 287  |  7.140100  | 10.705651  | 18.712344  | 0.874319 | -0.001482|
+|1242  | 19.734483  | 32.797541  | 39.949489  | 0.200186 | -0.517726|
+|1806  |  7.079202  | 11.307161  | 20.009727  | 1.202363 |  0.843266|
+|1811  |  9.258806  | 17.562339  | 23.618220  | 0.489223 | -0.249335|
+|1812  |  5.240637  | 17.903996  | 35.676559  | 0.680350 | -0.854602|
+|2320  |  2.633426  |  6.583752  | 10.818358  | 1.003392 |  0.535164|
+|2964  |  2.949773  |  7.337360  | 15.471069  | 1.589517 |  2.171635|
+
+#### Brands premium per category
+
+**Assumption**: a brand is only premium in relation to a specific market segment (ex. Ralph Lauren is a luxury good for clothes but not for sneakers)
+
+![Local Image](assets/brands_kde.png)
+
+#### Status premium
+
+**Assumption**: specific products are highly sensitive to product status (ex. Sneakers)
+
+![Local Image](assets/status_kde.png)
 
 
 

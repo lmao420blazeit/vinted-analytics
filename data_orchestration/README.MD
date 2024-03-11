@@ -1,6 +1,99 @@
-# Pipeline Design
+## Data Engineering
 
-## Functional design
+### Todo
+
+- [ ] Implement unit test for each task
+- [ ] Implement dbt
+- [ ] Implement E2E tests for workflows
+- [ ] Scale the data pipelines
+- [ ] Implement a CDC tool to track changes in the database
+
+### Deconstructing Vinted API
+
+##### APK Decompiling
+
+We can download some  the APK from the Vinted app store and decompile it with [apktool](https://ibotpeaches.github.io/Apktool/).
+
+```bash
+apktool d vinted.apk
+```
+
+Other alternatives are:
+- Dex2jar
+- Jadx
+
+##### APK Decompiled
+
+Once the app is decompiled look into words such as 'api', 'latitude', 'brand_ids', 'rest', 'status', etc.
+
+![Local Image](assets/vintedapi.png)
+
+#### Useful Endpoints
+
+``` json
+params = {
+    "search_text": "+".join(
+        map(str, [tpl[1] for tpl in querys if tpl[0] == "search_text"])
+    ),
+    "catalog_ids": ",".join(
+        map(str, [tpl[1] for tpl in querys if tpl[0] == "catalog_ids[]"])
+    ),
+    "color_ids": ",".join(
+        map(str, [tpl[1] for tpl in querys if tpl[0] == "color_id[]"])
+    ),
+    "brand_ids": ",".join(
+        map(str, [tpl[1] for tpl in querys if tpl[0] == "brand_ids[]"])
+    ),
+    "size_ids": ",".join(
+        map(str, [tpl[1] for tpl in querys if tpl[0] == "size_id[]"])
+    ),
+    "material_ids": ",".join(
+        map(str, [tpl[1] for tpl in querys if tpl[0] == "material_id[]"])
+    ),
+    "status_ids": ",".join(
+        map(str, [tpl[1] for tpl in querys if tpl[0] == "status[]"])
+    ),
+    "country_ids": ",".join(
+        map(str, [tpl[1] for tpl in querys if tpl[0] == "country_id[]"])
+    ),
+    "city_ids": ",".join(
+        map(str, [tpl[1] for tpl in querys if tpl[0] == "city_id[]"])
+    ),
+    "is_for_swap": ",".join(
+        map(str, [1 for tpl in querys if tpl[0] == "disposal[]"])
+    ),
+    "currency": ",".join(
+        map(str, [tpl[1] for tpl in querys if tpl[0] == "currency"])
+    ),
+    "price_to": ",".join(
+        map(str, [tpl[1] for tpl in querys if tpl[0] == "price_to"])
+    ),
+    "price_from": ",".join(
+        map(str, [tpl[1] for tpl in querys if tpl[0] == "price_from"])
+    ),
+    "page": page,
+    "per_page": batch_size,
+    "order": ",".join(
+        map(str, [tpl[1] for tpl in querys if tpl[0] == "order"])
+    ),
+    "time": time
+}
+```
+
+## Pipeline Design
+
+### Database Architecture
+
+#### Staging Area
+
+![Local Image](assets/staging.png)
+Staging
+
+#### Semi-Normalized Layer
+![Local Image](assets/starschema.png)
+Star Schema
+
+### Pipeline design
 
 - **Atomicity**: a function should only do one task
 - **Idempotency**: 
@@ -155,14 +248,3 @@ from typing import List, Callable
 - **Data class**: data representation classes which add some cool functionalities (__post__init__ method), inheritance and custom operators at the cost of a bigger overhead during runtime.
 
 - **Testing**: SOON
-
-# Database Architecture
-
-## Staging Area
-
-![Local Image](assets/staging.png)
-Staging
-
-## Semi-Normalized Layer
-![Local Image](assets/starschema.png)
-Star Schema

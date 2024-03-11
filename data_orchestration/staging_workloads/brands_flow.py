@@ -17,4 +17,5 @@ if __name__ == "__main__":
     fetch_brands_from_vinted.serve(name="vinted-brands",
                         tags=["brands", "staging", "extraction", "api"],
                         pause_on_shutdown=False,
-                        interval=60*60*24)"""
+                        interval=60*60*24)
+    """

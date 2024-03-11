@@ -83,11 +83,12 @@ def transform_catalog_sale_performance(data):
                 brand_unique=("brand_title", "nunique")
             )
             .reset_index()
-    ).merge(
+            .merge(
             catalog_keys, 
             on="catalog_id", 
             how="left"
             )
+        )
     # Filter brands with more than 10 unique products for each day
     # transformed_data["products_per_user"] = transformed_data["product_unique"] / transformed_data["users_unique"]
     #transformed_data["normalized_price_std"] = transformed_data["price_std"] / transformed_data["price_median"]
