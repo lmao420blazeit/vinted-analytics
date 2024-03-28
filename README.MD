@@ -79,6 +79,8 @@ Currently just a few descriptive simple graphs. No callback functions.
 
 ### Streamlit
 
+[Streamlit EC2 host](http://16.171.182.134:8502/)
+
 ** Brands **
 ![Local Image](assets/dashboard_brands.png)
 
